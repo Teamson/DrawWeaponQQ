@@ -1,0 +1,4 @@
+{
+  "code": "export default class FixNodeY extends Laya.Script {\r\n    constructor() {\r\n        super();\r\n    }\r\n    onAwake() {\r\n        let myOwner = this.owner;\r\n        myOwner.y = myOwner.y * Laya.stage.displayHeight / 1334;\r\n    }\r\n}\r\n",
+  "references": []
+}

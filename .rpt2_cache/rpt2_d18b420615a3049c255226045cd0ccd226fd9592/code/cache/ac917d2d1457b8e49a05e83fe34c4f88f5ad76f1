@@ -1,0 +1,7 @@
+{
+  "code": "import Player from \"./Player\";\r\nimport GameLogic from \"./GameLogic\";\r\nexport default class FixPlayerHpBar extends Laya.Script {\r\n    constructor() {\r\n        super();\r\n        this.playerNode = null;\r\n        this.playerCrl = null;\r\n        this.ready = false;\r\n    }\r\n    onAwake() {\r\n        this.myOwner = this.owner;\r\n    }\r\n    onDisable() {\r\n    }\r\n    initData(node) {\r\n        this.playerNode = node;\r\n        this.ready = true;\r\n        this.playerCrl = this.playerNode.getComponent(Player);\r\n    }\r\n    onUpdate() {\r\n        if (!this.ready) {\r\n            return;\r\n        }\r\n        if (this.playerNode.transform == null || this.playerNode.transform == undefined) {\r\n            this.myOwner.destroy();\r\n            return;\r\n        }\r\n        this.myOwner.value = this.playerCrl.hp / this.playerCrl.hpMax;\r\n        let op = new Laya.Vector4(0, 0, 0);\r\n        let hPos = this.playerNode.transform.position.clone();\r\n        if (!this.playerCrl.isPlayer)\r\n            hPos.y += 4;\r\n        else\r\n            hPos.z -= 1;\r\n        GameLogic.Share._camera.viewport.project(hPos, GameLogic.Share._camera.projectionViewMatrix, op);\r\n        this.myOwner.pos(op.x / Laya.stage.clientScaleX, op.y / Laya.stage.clientScaleY);\r\n    }\r\n}\r\n",
+  "references": [
+    "E:/LayaProjects/DrawWeaponQQ/src/Crl/Player.ts",
+    "E:/LayaProjects/DrawWeaponQQ/src/Crl/GameLogic.ts"
+  ]
+}

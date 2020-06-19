@@ -1,0 +1,4 @@
+{
+  "code": "export default class Utility {\r\n    static calcDistance(a, b) {\r\n        return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));\r\n    }\r\n}\r\n",
+  "references": []
+}

@@ -1,0 +1,7 @@
+{
+  "code": "import WxApi from \"../Libs/WxApi\";\r\nimport GameLogic from \"../Crl/GameLogic\";\r\nexport default class LoadingUI extends Laya.Scene {\r\n    constructor() {\r\n        super();\r\n        this.perNum = this['perNum'];\r\n    }\r\n    onOpened(param) {\r\n        this.loadRes();\r\n    }\r\n    onClosed() {\r\n    }\r\n    loadRes() {\r\n        var resUrl = [\r\n            WxApi.UnityPath + 'line.lh',\r\n            WxApi.UnityPath + 'Hero_1.lh',\r\n            WxApi.UnityPath + 'Hero_Boss.lh'\r\n        ];\r\n        for (let i = 0; i < 7; i++) {\r\n            resUrl.push(WxApi.UnityPath + 'Arms_' + (i + 1) + '.lh');\r\n        }\r\n        Laya.loader.create(resUrl, Laya.Handler.create(this, this.onComplete), Laya.Handler.create(this, this.onProgress));\r\n    }\r\n    onComplete() {\r\n        GameLogic.Share.initScene();\r\n        Laya.timer.once(1000, this, () => {\r\n            Laya.Scene.open('MyScenes/GameUI.scene');\r\n        });\r\n    }\r\n    onProgress(value) {\r\n        this.perNum.text = Math.floor(value * 100) + '%';\r\n    }\r\n}\r\n",
+  "references": [
+    "E:/LayaProjects/DrawWeapon/src/Libs/WxApi.ts",
+    "E:/LayaProjects/DrawWeapon/src/Crl/GameLogic.ts"
+  ]
+}

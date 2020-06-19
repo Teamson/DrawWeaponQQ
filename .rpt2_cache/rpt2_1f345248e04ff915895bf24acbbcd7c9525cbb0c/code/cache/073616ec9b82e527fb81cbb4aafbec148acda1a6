@@ -1,0 +1,4 @@
+{
+  "code": "export default class OfflineUI extends Laya.Scene {\r\n    constructor() {\r\n        super();\r\n        this.coinNum = this['coinNum'];\r\n        this.noBtn = this['noBtn'];\r\n        this.trippleBtn = this['trippleBtn'];\r\n        this.toggleBtn = this['toggleBtn'];\r\n        this.point = this['point'];\r\n    }\r\n    onOpened(param) {\r\n    }\r\n    onClosed() {\r\n    }\r\n}\r\n",
+  "references": []
+}

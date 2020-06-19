@@ -1,0 +1,8 @@
+{
+  "code": "import Utility from \"../Mod/Utility\";\r\nimport WxApi from \"../Libs/WxApi\";\r\nimport SoundMgr from \"../Mod/SoundMgr\";\r\nexport default class Boss extends Laya.Script {\r\n    constructor() {\r\n        super();\r\n        this.myOwner = null;\r\n        this._ani = null;\r\n        this.isHited = false;\r\n        this.isDied = false;\r\n        this.hp = 100;\r\n    }\r\n    onAwake() {\r\n        this.myOwner = this.owner;\r\n        this._ani = this.owner.getComponent(Laya.Animator);\r\n    }\r\n    onDisable() {\r\n    }\r\n    playDied() {\r\n        this._ani.speed = 1;\r\n        this._ani.crossFade(\"Take 001\", 0.05);\r\n    }\r\n    hitBack(atk) {\r\n        if (this.isDied || this.isHited) {\r\n            return;\r\n        }\r\n        let id = Utility.GetRandom(1, 3);\r\n        SoundMgr.instance.playSoundEffect('castleHit' + id + '.mp3');\r\n        WxApi.DoVibrate();\r\n        Utility.objectShake(this.myOwner, 0.2, 0.1);\r\n        this.hp -= atk;\r\n        if (this.hp <= 0) {\r\n            this.isDied = true;\r\n            this.playDied();\r\n            Laya.timer.once(1000, this, () => {\r\n                this.owner.destroy();\r\n            });\r\n            return;\r\n        }\r\n        this.isHited = true;\r\n        Laya.timer.once(500, this, () => { this.isHited = false; });\r\n    }\r\n}\r\n",
+  "references": [
+    "E:/GitProjects/DrawWeapon/src/Mod/Utility.ts",
+    "E:/GitProjects/DrawWeapon/src/Libs/WxApi.ts",
+    "E:/GitProjects/DrawWeapon/src/Mod/SoundMgr.ts"
+  ]
+}

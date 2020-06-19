@@ -1,0 +1,6 @@
+{
+  "code": "import JJUtils from \"../Common/JJUtils\";\r\nexport default class AutoFixPosY extends Laya.Script {\r\n    constructor() {\r\n        super();\r\n        this.isFix = false;\r\n    }\r\n    onAwake() {\r\n        if (this.isFix) {\r\n            let node = this.owner;\r\n            JJUtils.fixNodeY(node);\r\n        }\r\n    }\r\n    onDestroy() {\r\n    }\r\n}\r\n",
+  "references": [
+    "E:/GitProjects/DrawWeapon/src/JJExport/Common/JJUtils.ts"
+  ]
+}

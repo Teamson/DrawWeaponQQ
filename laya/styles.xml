@@ -1,0 +1,5 @@
+<res>
+   <item name="mainUI/sy-dutiao.png" type="Sprite" compress="0" pack="0" quality="80" props="sizeGrid=0,22,0,16" picType="0" scale="0"/>
+   <item name="mainUI/sy_xt.png" type="Sprite" compress="0" pack="0" quality="80" props="sizeGrid=0,20,0,20" picType="0" scale="0"/>
+   <item name="finishUI/js-fq.png" type="Sprite" compress="0" pack="0" quality="80" props="color=#000000" picType="0" scale="0"/>
+</res>

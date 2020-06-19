@@ -1,0 +1,4 @@
+{
+  "code": "export default class GameLogic {\r\n    constructor() {\r\n        Laya.Scene.open('MyScenes/GameUI.scene');\r\n    }\r\n    loadAtlas() {\r\n    }\r\n}\r\n",
+  "references": []
+}

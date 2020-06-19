@@ -1,0 +1,7 @@
+{
+  "code": "import PlayerDataMgr from \"../Libs/PlayerDataMgr\";\r\nimport GameLogic from \"../Crl/GameLogic\";\r\nexport default class FinishUI extends Laya.Scene {\r\n    constructor() {\r\n        super();\r\n        this.openBoxBtn = this['openBoxBtn'];\r\n        this.videoBtn = this['videoBtn'];\r\n        this.noBtn = this['noBtn'];\r\n        this.bounes = this['bounes'];\r\n    }\r\n    onOpened(param) {\r\n        this.initData();\r\n    }\r\n    onDisable() {\r\n    }\r\n    initData() {\r\n        this.openBoxBtn.on(Laya.Event.CLICK, this, this.openBoxCB);\r\n        this.videoBtn.on(Laya.Event.CLICK, this, this.videoBtnCB);\r\n        this.noBtn.on(Laya.Event.CLICK, this, this.noBtnCB);\r\n        let grade = PlayerDataMgr.getPlayerData().grade - 1;\r\n        let g = Math.floor(grade % 4) == 0 ? 4 : Math.floor(grade % 4);\r\n        this.bounes.skin = g == 4 ? 'finishUI/js-bx.png' : 'finishUI/js-ys.png';\r\n        this.openBoxBtn.visible = g == 4;\r\n        this.videoBtn.visible = g != 4;\r\n    }\r\n    openBoxCB() {\r\n    }\r\n    videoBtnCB() {\r\n    }\r\n    noBtnCB() {\r\n        GameLogic.Share.gradeIndex = 0;\r\n        PlayerDataMgr.getPlayerData().gradeIndex = 0;\r\n        PlayerDataMgr.setPlayerData();\r\n        GameLogic.Share.restartGame();\r\n        Laya.Scene.open('MyScenes/GameUI.scene');\r\n    }\r\n}\r\n",
+  "references": [
+    "E:/LayaProjects/DrawWeapon/src/Libs/PlayerDataMgr.ts",
+    "E:/LayaProjects/DrawWeapon/src/Crl/GameLogic.ts"
+  ]
+}

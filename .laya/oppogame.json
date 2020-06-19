@@ -1,0 +1,91 @@
+{
+    "copyFilesFilter": [
+        "../bin/**/*.*"
+    ],
+    "openDataZone": false,
+    "compressJson": true,
+    "compressJsonFilter": [
+        "$basePath/**/*.{json,atlas}"
+    ],
+    "compressJsonNoteList": [
+        ""
+    ],
+    "compressImage": true,
+    "compressImageFilter": [
+        "$basePath/**/*.{png,jpg}"
+    ],
+    "compressImageNoteList": [
+        ""
+    ],
+    "compressJs": true,
+    "compressJsFilter": [
+        "$basePath/**/*.js"
+    ],
+    "compressJsNoteList": [
+        ""
+    ],
+    "version": false,
+    "versionFilter": [
+        "$basePath/**/*.*",
+        "!$basePath/*.html",
+        "!$basePath/{version.json,game.js,game.json,project.config.json,weapp-adapter.js,project.swan.json,swan-game-adapter.js,main.js,gameConfig.json,my-adapter.js}",
+        "!$basePath/layaforqq/**/*.*"
+    ],
+    "versionNoteList": [
+        "",
+        "",
+        "",
+        ""
+    ],
+    "exclude": false,
+    "excludeFilter": [
+        "!$basePath/res/**/*.*"
+    ],
+    "vexcludeNoteList": [
+        ""
+    ],
+    "packfile": false,
+    "keepPlatformFile": false,
+    "packfileFilter": [
+        ""
+    ],
+    "packfileFullValue": [
+        "$basePath/**/*.*"
+    ],
+    "packfileTargetValue": "",
+    "packfileNoteList": [
+        ""
+    ],
+    "clearReleaseDir": true,
+    "compile": true,
+    "forceCompile": false,
+    "onlyIndexJS": true,
+    "es6toes5": false,
+    "projectType": "ts",
+    "pubTime": 1587968088720,
+    "oppoInfo": {
+        "name": "画武器",
+        "projName": "quickgame",
+        "package": "com.jiujiu.drawweapon",
+        "icon": "C:\\Users\\WIN10\\Desktop\\icon.png",
+        "versionName": "1.0",
+        "versionCode": 1,
+        "minPlatformVersion": 1040,
+        "orientation": "portrait",
+        "logLevel": "off",
+        "oppoDebug": false,
+        "useReleaseSign": false,
+        "subpack": false
+    },
+    "oppoSign": {
+        "generateSign": true,
+        "countryName": "CN",
+        "provinceName": "GD",
+        "localityName": "GZ",
+        "orgName": "JiuJiu",
+        "orgUnitName": "JiuJiu",
+        "commonName": "HeTiansheng",
+        "emailAddr": "491991027@qq.com"
+    },
+    "oppoSubpack": []
+}

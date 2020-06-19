@@ -1,0 +1,1 @@
+{"type":"Image","props":{"y":0,"x":0,"skin":"mainUI/zd_bq_2.png","presetID":1,"name":"cry","isPresetRoot":true,"anchorY":1,"anchorX":0},"compId":110,"child":[{"type":"Script","props":{"presetID":2,"runtime":"Crl/FixAiTips.ts"},"compId":111}],"loadList":["mainUI/zd_bq_2.png"],"loadList3D":[]}

@@ -1,0 +1,1 @@
+{"type":"Image","props":{"skin":"mainUI/sy-jb.png","anchorX":0.5,"x":0,"anchorY":0.5,"y":0,"name":"coinEffect","preset":"laya/pages/prefab/coinEffect.prefab","presetID":1,"isPresetRoot":true},"compId":12,"child":[],"isAniNode":true,"nodeParent":2,"searchKey":"Image,coinEffect","label":"coinEffect","isDirectory":false,"hasChild":false,"x":15}

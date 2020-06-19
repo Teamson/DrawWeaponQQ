@@ -1,0 +1,26 @@
+{
+  "code": "import DrawUI from \"./JJExport/View/DrawUI\";\r\nimport AutoFixPosY from \"./JJExport/Libs/AutoFixPosY\";\r\nimport FinishGameUI from \"./JJExport/View/FinishGameUI\";\r\nimport FriendGameUI from \"./JJExport/View/FriendGameUI\";\r\nimport FullGameUI from \"./JJExport/View/FullGameUI\";\r\nimport FixNodeY from \"./Libs/FixNodeY\";\r\nimport NewGameUI from \"./JJExport/View/NewGameUI\";\r\nimport ProgramUI from \"./JJExport/View/ProgramUI\";\r\nimport RecommendUI from \"./JJExport/View/RecommendUI\";\r\nimport ScrollUI from \"./JJExport/View/ScrollUI\";\r\nimport BoxUI from \"./View/BoxUI\";\r\nimport FixAdShareIcon from \"./Libs/FixAdShareIcon\";\r\nimport FinishUI from \"./View/FinishUI\";\r\nimport FreeSkinUI from \"./View/FreeSkinUI\";\r\nimport GameUI from \"./View/GameUI\";\r\nimport GameTopNode from \"./View/GameTopNode\";\r\nimport KillBossUI from \"./View/KillBossUI\";\r\nimport LoadingUI from \"./View/LoadingUI\";\r\nimport OfflineUI from \"./View/OfflineUI\";\r\nimport SkinUI from \"./View/SkinUI\";\r\nimport FixAiTips from \"./Crl/FixAiTips\";\r\nexport default class GameConfig {\r\n    constructor() {\r\n    }\r\n    static init() {\r\n        var reg = Laya.ClassUtils.regClass;\r\n        reg(\"JJExport/View/DrawUI.ts\", DrawUI);\r\n        reg(\"JJExport/Libs/AutoFixPosY.ts\", AutoFixPosY);\r\n        reg(\"JJExport/View/FinishGameUI.ts\", FinishGameUI);\r\n        reg(\"JJExport/View/FriendGameUI.ts\", FriendGameUI);\r\n        reg(\"JJExport/View/FullGameUI.ts\", FullGameUI);\r\n        reg(\"Libs/FixNodeY.ts\", FixNodeY);\r\n        reg(\"JJExport/View/NewGameUI.ts\", NewGameUI);\r\n        reg(\"JJExport/View/ProgramUI.ts\", ProgramUI);\r\n        reg(\"JJExport/View/RecommendUI.ts\", RecommendUI);\r\n        reg(\"JJExport/View/ScrollUI.ts\", ScrollUI);\r\n        reg(\"View/BoxUI.ts\", BoxUI);\r\n        reg(\"Libs/FixAdShareIcon.ts\", FixAdShareIcon);\r\n        reg(\"View/FinishUI.ts\", FinishUI);\r\n        reg(\"View/FreeSkinUI.ts\", FreeSkinUI);\r\n        reg(\"View/GameUI.ts\", GameUI);\r\n        reg(\"View/GameTopNode.ts\", GameTopNode);\r\n        reg(\"View/KillBossUI.ts\", KillBossUI);\r\n        reg(\"View/LoadingUI.ts\", LoadingUI);\r\n        reg(\"View/OfflineUI.ts\", OfflineUI);\r\n        reg(\"View/SkinUI.ts\", SkinUI);\r\n        reg(\"Crl/FixAiTips.ts\", FixAiTips);\r\n    }\r\n}\r\nGameConfig.width = 750;\r\nGameConfig.height = 1334;\r\nGameConfig.scaleMode = \"fixedwidth\";\r\nGameConfig.screenMode = \"vertical\";\r\nGameConfig.alignV = \"middle\";\r\nGameConfig.alignH = \"center\";\r\nGameConfig.startScene = \"MyScenes/LoadingUI.scene\";\r\nGameConfig.sceneRoot = \"\";\r\nGameConfig.debug = false;\r\nGameConfig.stat = false;\r\nGameConfig.physicsDebug = false;\r\nGameConfig.exportSceneToJson = true;\r\nGameConfig.init();\r\n",
+  "references": [
+    "E:/GitProjects/DrawWeapon/src/JJExport/View/DrawUI.ts",
+    "E:/GitProjects/DrawWeapon/src/JJExport/Libs/AutoFixPosY.ts",
+    "E:/GitProjects/DrawWeapon/src/JJExport/View/FinishGameUI.ts",
+    "E:/GitProjects/DrawWeapon/src/JJExport/View/FriendGameUI.ts",
+    "E:/GitProjects/DrawWeapon/src/JJExport/View/FullGameUI.ts",
+    "E:/GitProjects/DrawWeapon/src/Libs/FixNodeY.ts",
+    "E:/GitProjects/DrawWeapon/src/JJExport/View/NewGameUI.ts",
+    "E:/GitProjects/DrawWeapon/src/JJExport/View/ProgramUI.ts",
+    "E:/GitProjects/DrawWeapon/src/JJExport/View/RecommendUI.ts",
+    "E:/GitProjects/DrawWeapon/src/JJExport/View/ScrollUI.ts",
+    "E:/GitProjects/DrawWeapon/src/View/BoxUI.ts",
+    "E:/GitProjects/DrawWeapon/src/Libs/FixAdShareIcon.ts",
+    "E:/GitProjects/DrawWeapon/src/View/FinishUI.ts",
+    "E:/GitProjects/DrawWeapon/src/View/FreeSkinUI.ts",
+    "E:/GitProjects/DrawWeapon/src/View/GameUI.ts",
+    "E:/GitProjects/DrawWeapon/src/View/GameTopNode.ts",
+    "E:/GitProjects/DrawWeapon/src/View/KillBossUI.ts",
+    "E:/GitProjects/DrawWeapon/src/View/LoadingUI.ts",
+    "E:/GitProjects/DrawWeapon/src/View/OfflineUI.ts",
+    "E:/GitProjects/DrawWeapon/src/View/SkinUI.ts",
+    "E:/GitProjects/DrawWeapon/src/Crl/FixAiTips.ts"
+  ]
+}

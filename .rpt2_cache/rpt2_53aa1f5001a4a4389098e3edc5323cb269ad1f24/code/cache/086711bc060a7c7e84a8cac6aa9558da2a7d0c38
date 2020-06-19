@@ -1,0 +1,6 @@
+{
+  "code": "import PlayerDataMgr from \"../Libs/PlayerDataMgr\";\r\nexport default class GameTopNode extends Laya.Script {\r\n    constructor() {\r\n        super();\r\n    }\r\n    onEnable() {\r\n        GameTopNode.Share = this;\r\n        this.initData();\r\n    }\r\n    initData() {\r\n        this.coinNum.value = PlayerDataMgr.getPlayerData().coin.toString();\r\n        this.powerNum.value = PlayerDataMgr.getPlayerData().power.toString();\r\n        this.gradeNum.text = PlayerDataMgr.getPlayerData().grade.toString();\r\n        this.gradeBar.value = 0;\r\n        this.bar.width = (PlayerDataMgr.getPlayerData().gradeIndex + 1) / 4 * 500;\r\n        let g = Math.floor(PlayerDataMgr.getPlayerData().grade % 4) == 0 ? 4 : Math.floor(PlayerDataMgr.getPlayerData().grade % 4);\r\n        for (let i = 0; i < this.keyNode.numChildren; i++) {\r\n            let key = this.keyNode.getChildAt(i);\r\n            key.skin = g > i + 1 ? 'mainUI/sy-ys1.png' : 'mainUI/sy-ys2.png';\r\n        }\r\n    }\r\n    onDisable() {\r\n    }\r\n}\r\n",
+  "references": [
+    "E:/LayaProjects/DrawWeapon/src/Libs/PlayerDataMgr.ts"
+  ]
+}

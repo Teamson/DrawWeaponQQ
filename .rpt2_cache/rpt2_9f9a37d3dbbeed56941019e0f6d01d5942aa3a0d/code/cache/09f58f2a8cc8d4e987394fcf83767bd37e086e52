@@ -1,0 +1,4 @@
+{
+  "code": "export default class WxApi {\r\n}\r\nWxApi.UnityPath = 'LayaScene_MyScene/Conventional/';\r\n",
+  "references": []
+}

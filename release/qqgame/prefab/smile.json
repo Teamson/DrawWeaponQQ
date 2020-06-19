@@ -1,0 +1,1 @@
+{"type":"Image","props":{"y":0,"x":0,"skin":"mainUI/zd_bq_1.png","presetID":1,"name":"smile","isPresetRoot":true,"anchorY":1,"anchorX":0},"compId":109,"child":[{"type":"Script","props":{"presetID":2,"runtime":"Crl/FixAiTips.ts"},"compId":110}],"loadList":["mainUI/zd_bq_1.png"],"loadList3D":[]}

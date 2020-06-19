@@ -1,0 +1,11 @@
+{
+  "code": "import FinishUI from \"./View/FinishUI\";\r\nimport FixNodeY from \"./Libs/FixNodeY\";\r\nimport GameUI from \"./View/GameUI\";\r\nimport GameTopNode from \"./View/GameTopNode\";\r\nimport LoadingUI from \"./View/LoadingUI\";\r\nimport OfflineUI from \"./View/OfflineUI\";\r\nexport default class GameConfig {\r\n    constructor() {\r\n    }\r\n    static init() {\r\n        var reg = Laya.ClassUtils.regClass;\r\n        reg(\"View/FinishUI.ts\", FinishUI);\r\n        reg(\"Libs/FixNodeY.ts\", FixNodeY);\r\n        reg(\"View/GameUI.ts\", GameUI);\r\n        reg(\"View/GameTopNode.ts\", GameTopNode);\r\n        reg(\"View/LoadingUI.ts\", LoadingUI);\r\n        reg(\"View/OfflineUI.ts\", OfflineUI);\r\n    }\r\n}\r\nGameConfig.width = 750;\r\nGameConfig.height = 1334;\r\nGameConfig.scaleMode = \"fixedwidth\";\r\nGameConfig.screenMode = \"vertical\";\r\nGameConfig.alignV = \"middle\";\r\nGameConfig.alignH = \"center\";\r\nGameConfig.startScene = \"MyScenes/GameUI.scene\";\r\nGameConfig.sceneRoot = \"\";\r\nGameConfig.debug = false;\r\nGameConfig.stat = false;\r\nGameConfig.physicsDebug = false;\r\nGameConfig.exportSceneToJson = true;\r\nGameConfig.init();\r\n",
+  "references": [
+    "E:/LayaProjects/DrawWeapon/src/View/FinishUI.ts",
+    "E:/LayaProjects/DrawWeapon/src/Libs/FixNodeY.ts",
+    "E:/LayaProjects/DrawWeapon/src/View/GameUI.ts",
+    "E:/LayaProjects/DrawWeapon/src/View/GameTopNode.ts",
+    "E:/LayaProjects/DrawWeapon/src/View/LoadingUI.ts",
+    "E:/LayaProjects/DrawWeapon/src/View/OfflineUI.ts"
+  ]
+}

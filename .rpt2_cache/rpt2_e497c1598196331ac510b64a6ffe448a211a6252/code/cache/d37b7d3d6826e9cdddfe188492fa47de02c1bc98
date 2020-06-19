@@ -1,0 +1,6 @@
+{
+  "code": "import GameUI from \"./View/GameUI\";\r\nexport default class GameConfig {\r\n    constructor() {\r\n    }\r\n    static init() {\r\n        var reg = Laya.ClassUtils.regClass;\r\n        reg(\"View/GameUI.ts\", GameUI);\r\n    }\r\n}\r\nGameConfig.width = 750;\r\nGameConfig.height = 1334;\r\nGameConfig.scaleMode = \"fixedwidth\";\r\nGameConfig.screenMode = \"vertical\";\r\nGameConfig.alignV = \"middle\";\r\nGameConfig.alignH = \"center\";\r\nGameConfig.startScene = \"MyScenes/GameUI.scene\";\r\nGameConfig.sceneRoot = \"\";\r\nGameConfig.debug = false;\r\nGameConfig.stat = false;\r\nGameConfig.physicsDebug = false;\r\nGameConfig.exportSceneToJson = true;\r\nGameConfig.init();\r\n",
+  "references": [
+    "E:/LayaProjects/DrawWeapon/src/View/GameUI.ts"
+  ]
+}
