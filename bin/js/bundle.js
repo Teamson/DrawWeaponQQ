@@ -799,16 +799,12 @@
             else if (Laya.Browser.onWeiXin && !this.appBox) {
                 this.initAppBox(true);
             }
-            if (Laya.Browser.onWeiXin) {
-                this.showBanner();
-            }
         }
         closeAppBox() {
             if (Laya.Browser.onWeiXin && this.appBox) {
                 this.appBox.destroy();
                 this.appBox = null;
                 this.appBoxCloseCB = null;
-                this.hideBanner();
             }
         }
         initBanner() {
@@ -1111,7 +1107,11 @@
             }
         }
         static isValidBanner() {
-            return PlayerDataMgr.getPlayerData().grade >= JJMgr.instance.dataConfig.front_pass_gate && JJMgr.instance.dataConfig.is_allow_area == 1 && WxApi.isWhiteList;
+            if (WxApi.isWhiteList) {
+                return PlayerDataMgr.getPlayerData().grade >= JJMgr.instance.dataConfig.front_pass_gate && JJMgr.instance.dataConfig.is_allow_area == 1;
+            }
+            else
+                return false;
         }
         static calculateShareNumber() {
             if (localStorage.getItem('lastDate')) {
@@ -2110,7 +2110,6 @@
             this.isBanGameUIBanner = false;
             this.showBottomBanner = true;
             this.hadAutoShowUpgrade = false;
-            console.log((Math.random() * 0.1 + 0.4).toFixed(2));
             AdMgr.instance.initAd();
             Utility.loadJson('res/config/aiConfig.json', (data) => {
                 PlayerDataMgr.aiConfig = data;
@@ -2144,6 +2143,7 @@
                         let wl = localStorage.getItem('WhiteList');
                         WxApi.isWhiteList = wl == '1';
                     }
+                    console.log('WxApi.isWhiteList:', WxApi.isWhiteList);
                 }
             });
         }
@@ -2409,11 +2409,16 @@
                     PlayerDataMgr.getPlayerData().gradeIndex = 0;
                     PlayerDataMgr.setPlayerData();
                     Laya.Scene.close('MyScenes/GameUI.scene');
-                    Laya.Scene.open('MyScenes/KillBossUI.scene', true, () => {
-                        this._playerNode.active = true;
+                    if (JJMgr.instance.dataConfig.front_box_page && WxApi.isValidBanner()) {
+                        Laya.Scene.open('MyScenes/KillBossUI.scene', true, () => {
+                            this._playerNode.active = true;
+                            Laya.Scene.open('MyScenes/FinishUI.scene', false);
+                        });
+                        this._playerNode.active = false;
+                    }
+                    else {
                         Laya.Scene.open('MyScenes/FinishUI.scene', false);
-                    });
-                    this._playerNode.active = false;
+                    }
                     return;
                 }
                 PlayerDataMgr.getPlayerData().gradeIndex = this.gradeIndex;
@@ -2453,9 +2458,14 @@
                 GameLogic.Share._playerNode.active = false;
                 GameLogic.Share._aiNode.active = false;
                 WxApi.tempGrade = PlayerDataMgr.getPlayerData().grade;
-                Laya.Scene.open('MyScenes/KillBossUI.scene', false, () => {
+                if (JJMgr.instance.dataConfig.front_box_page && WxApi.isValidBanner()) {
+                    Laya.Scene.open('MyScenes/KillBossUI.scene', false, () => {
+                        cb();
+                    });
+                }
+                else {
                     cb();
-                });
+                }
             }
         }
         getIsOver() {
@@ -3226,12 +3236,22 @@
                         b.toFixed(2);
                         break;
                     case 1:
+                        b = Math.random() * 0.19 + 0.2;
+                        b.toFixed(2);
                         break;
                     case 2:
+                        b = Math.random() * 0.19 + 0.2;
+                        b.toFixed(2);
+                        break;
+                    case 3:
+                        b = Math.random() * 0.05 + 0.1;
+                        b.toFixed(2);
                         break;
                 }
+                this.bounesNum = b;
             }
             else {
+                this.bounesNum = Math.floor(Math.random() * 200 + 100);
             }
         }
         txBtnCB() {

@@ -68,9 +68,9 @@ export default class AdMgr {
             this.initAppBox(true)
         }
 
-        if (Laya.Browser.onWeiXin) {
-            this.showBanner()
-        }
+        // if (Laya.Browser.onWeiXin) {
+        //     this.showBanner()
+        // }
     }
 
     closeAppBox() {
@@ -79,7 +79,7 @@ export default class AdMgr {
             this.appBox = null
             this.appBoxCloseCB = null
 
-            this.hideBanner()
+            //this.hideBanner()
         }
     }
 

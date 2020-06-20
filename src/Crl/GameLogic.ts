@@ -100,6 +100,7 @@ export default class GameLogic {
                     let wl = localStorage.getItem('WhiteList')
                     WxApi.isWhiteList = wl == '1'
                 }
+                console.log('WxApi.isWhiteList:', WxApi.isWhiteList)
             }
         })
     }
@@ -405,12 +406,15 @@ export default class GameLogic {
                 PlayerDataMgr.getPlayerData().gradeIndex = 0
                 PlayerDataMgr.setPlayerData()
                 Laya.Scene.close('MyScenes/GameUI.scene')
-                Laya.Scene.open('MyScenes/KillBossUI.scene', true, () => {
-                    this._playerNode.active = true
+                if (JJMgr.instance.dataConfig.front_box_page && WxApi.isValidBanner()) {
+                    Laya.Scene.open('MyScenes/KillBossUI.scene', true, () => {
+                        this._playerNode.active = true
+                        Laya.Scene.open('MyScenes/FinishUI.scene', false)
+                    })
+                    this._playerNode.active = false
+                } else {
                     Laya.Scene.open('MyScenes/FinishUI.scene', false)
-                })
-                this._playerNode.active = false
-                //Laya.Scene.open('MyScenes/FinishUI.scene', false)
+                }
                 return
             }
             PlayerDataMgr.getPlayerData().gradeIndex = this.gradeIndex
@@ -453,9 +457,14 @@ export default class GameLogic {
             GameLogic.Share._playerNode.active = false
             GameLogic.Share._aiNode.active = false
             WxApi.tempGrade = PlayerDataMgr.getPlayerData().grade
-            Laya.Scene.open('MyScenes/KillBossUI.scene', false, () => {
+
+            if (JJMgr.instance.dataConfig.front_box_page && WxApi.isValidBanner()) {
+                Laya.Scene.open('MyScenes/KillBossUI.scene', false, () => {
+                    cb()
+                })
+            } else {
                 cb()
-            })
+            }
         }
     }
 

@@ -233,7 +233,10 @@ export default class WxApi {
         }
     }
     public static isValidBanner() {
-        return PlayerDataMgr.getPlayerData().grade >= JJMgr.instance.dataConfig.front_pass_gate && JJMgr.instance.dataConfig.is_allow_area == 1 && WxApi.isWhiteList
+        if (WxApi.isWhiteList) {
+            return PlayerDataMgr.getPlayerData().grade >= JJMgr.instance.dataConfig.front_pass_gate && JJMgr.instance.dataConfig.is_allow_area == 1
+        } else
+            return false
     }
 
     //计算分享次数
