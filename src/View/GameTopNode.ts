@@ -26,14 +26,25 @@ export default class GameTopNode extends Laya.Script {
     public bossPic: Laya.Image
     /**  @prop {name:powerTime,tips:"",type:Node}*/
     public powerTime: Laya.Label
+    /**  @prop {name:txNode,tips:"",type:Node}*/
+    public txNode: Laya.Sprite
 
     onEnable() {
         GameTopNode.Share = this
 
         this.calculateTime()
         Laya.timer.loop(1000, this, this.calculateTime)
-        this.initData()
+        this.initData();
+
+        (this.txNode.getChildByName('txBtn') as Laya.Image).on(Laya.Event.CLICK, this, this.txBtnCB);
+        Laya.timer.frameLoop(2, this, () => {
+            (this.txNode.getChildByName('curNum') as Laya.Label).text = PlayerDataMgr.getPacketData().curCash.toFixed(2);
+        })
     }
+    txBtnCB() {
+        Laya.Scene.open('MyScenes/TakeCashUI.scene', false)
+    }
+
 
     initData() {
         this.coinNum.value = PlayerDataMgr.getPlayerData().coin.toString()
@@ -51,6 +62,10 @@ export default class GameTopNode extends Laya.Script {
 
     onDisable() {
         Laya.timer.clearAll(this)
+    }
+
+    onUpdate() {
+        this.coinNum.value = PlayerDataMgr.getPlayerData().coin.toString()
     }
 
     calculateTime() {

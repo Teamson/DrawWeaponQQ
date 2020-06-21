@@ -9,7 +9,7 @@ export default class WxApi {
     public static isWhiteList: boolean = false
 
     public static openId: string = ''
-    public static version: string = '1.0.3'
+    public static version: string = '1.0.4'
     public static isVibrate: boolean = true
     public static isMusic: boolean = true
     public static OnShowFun: Function = null

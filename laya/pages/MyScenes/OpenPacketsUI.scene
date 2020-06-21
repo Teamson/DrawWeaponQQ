@@ -2,7 +2,7 @@
     "x":0,
     "type":"Scene",
     "selectedBox":2,
-    "selecteID":9,
+    "selecteID":25,
     "searchKey":"Scene",
     "props":{"width":750,"sceneColor":"#000000","runtime":"View/OpenPacketsUI.ts","mouseThrough":false,"mouseEnabled":true,"height":1624},
     "nodeParent":-1,
@@ -43,7 +43,6 @@
             "compId":4,
             "child":[
                 {
-                    "x":30,
                     "type":"Image",
                     "searchKey":"Image,bg",
                     "props":{"y":0,"x":0,"var":"bg","skin":"packetsUI/hb-hb5.png","anchorY":0.5,"anchorX":0.5},
@@ -57,7 +56,6 @@
                         ]
                 },
                 {
-                    "x":30,
                     "type":"Script",
                     "switchAble":true,
                     "source":"src/Libs/FixNodeY.ts",
@@ -74,7 +72,6 @@
                         ]
                 },
                 {
-                    "x":30,
                     "type":"Image",
                     "searchKey":"Image,closeOpenNodeBtn",
                     "props":{"y":-330,"x":267,"var":"closeOpenNodeBtn","skin":"packetsUI/hb-x.png","anchorY":0.5,"anchorX":0.5},
@@ -88,7 +85,6 @@
                         ]
                 },
                 {
-                    "x":30,
                     "type":"Image",
                     "searchKey":"Image,openBtn",
                     "props":{"y":21,"x":0,"width":200,"var":"openBtn","height":200,"anchorY":0.5,"anchorX":0.5},
@@ -102,7 +98,6 @@
                         ]
                 },
                 {
-                    "x":30,
                     "type":"Image",
                     "searchKey":"Image,tips",
                     "props":{"y":-150,"x":0,"var":"tips","skin":"packetsUI/hb-wz.png","anchorY":0.5,"anchorX":0.5},
@@ -279,7 +274,7 @@
                                         ]
                                 }]
                         }],
-                    "$HIDDEN":false
+                    "$HIDDEN":true
                 },
                 {
                     "x":30,
@@ -288,13 +283,14 @@
                     "props":{"var":"coinNode"},
                     "nodeParent":9,
                     "label":"coinNode",
-                    "isOpen":false,
+                    "isOpen":true,
                     "isDirectory":true,
                     "isAniNode":true,
                     "hasChild":true,
                     "compId":21,
                     "child":[
                         {
+                            "x":45,
                             "type":"Image",
                             "searchKey":"Image",
                             "props":{"y":-310,"x":0,"skin":"packetsUI/hb-wz13.png","anchorY":0.5,"anchorX":0.5},
@@ -308,6 +304,7 @@
                                 ]
                         },
                         {
+                            "x":45,
                             "type":"Image",
                             "searchKey":"Image",
                             "props":{"y":-180,"x":0,"skin":"packetsUI/hb-jb.png","anchorY":0.5,"anchorX":0.5},
@@ -321,6 +318,7 @@
                                 ]
                         },
                         {
+                            "x":45,
                             "type":"Label",
                             "searchKey":"Label,coinNum",
                             "props":{"y":-40,"x":0,"var":"coinNum","text":"300金币","fontSize":88,"font":"Arial","color":"#eb000a","anchorY":0.5,"anchorX":0.5},
@@ -334,9 +332,10 @@
                                 ]
                         },
                         {
+                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,getCoinBtn",
-                            "props":{"y":290,"x":0,"var":"getCoinBtn","skin":"packetsUI/hb-an.png","anchorY":0.5,"anchorX":0.5},
+                            "props":{"y":290,"x":0,"visible":true,"var":"getCoinBtn","skin":"packetsUI/hb-an.png","anchorY":0.5,"anchorX":0.5},
                             "nodeParent":21,
                             "label":"getCoinBtn",
                             "isOpen":true,
@@ -346,6 +345,7 @@
                             "compId":25,
                             "child":[
                                 {
+                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image",
                                     "props":{"y":46,"x":247,"skin":"packetsUI/hb-wz7.png","anchorY":0.5,"anchorX":0.5},
@@ -357,9 +357,10 @@
                                     "compId":26,
                                     "child":[
                                         ]
-                                }]
+                                }],
+                            "$HIDDEN":false
                         }],
-                    "$HIDDEN":true
+                    "$HIDDEN":false
                 }],
             "$HIDDEN":false
         }],

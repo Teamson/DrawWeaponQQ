@@ -49,7 +49,7 @@ export default class GameLogic {
     public showBottomBanner: boolean = true
 
     constructor() {
-        //localStorage.clear()
+        localStorage.clear()
         //初始化广告
         AdMgr.instance.initAd()
         //加载JSON

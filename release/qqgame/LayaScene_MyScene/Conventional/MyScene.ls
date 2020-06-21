@@ -10,6 +10,7 @@
 				0.259
 			],
 			"reflectionDecodingFormat":1,
+			"reflection":"Assets/Scenes/MySceneGIReflection.ltcb",
 			"reflectionIntensity":1,
 			"ambientMode":1,
 			"ambientSphericalHarmonics":[

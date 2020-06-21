@@ -132,7 +132,6 @@ export default class GameUI extends Laya.Scene {
         this.getBounesBtn.on(Laya.Event.CLICK, this, this.getBounesBtnCB)
         Utility.rotateLoop(this.getBounesBtn.getChildAt(0), 15, 100)
 
-
         this.updatePlayerItem()
         Laya.timer.loop(1000, this, this.updatePlayerItem)
 

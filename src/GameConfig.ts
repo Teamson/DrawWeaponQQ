@@ -2,6 +2,7 @@
 import BoxUI from "./View/BoxUI"
 import FixAdShareIcon from "./Libs/FixAdShareIcon"
 import FixNodeY from "./Libs/FixNodeY"
+import CashRecordUI from "./View/CashRecordUI"
 import FinishUI from "./View/FinishUI"
 import FreeSkinUI from "./View/FreeSkinUI"
 import GameUI from "./View/GameUI"
@@ -11,6 +12,7 @@ import LoadingUI from "./View/LoadingUI"
 import OfflineUI from "./View/OfflineUI"
 import OpenPacketsUI from "./View/OpenPacketsUI"
 import SkinUI from "./View/SkinUI"
+import TakeCashUI from "./View/TakeCashUI"
 import FixAiTips from "./Crl/FixAiTips"
 /*
 * 游戏初始化配置;
@@ -34,6 +36,7 @@ export default class GameConfig{
         reg("View/BoxUI.ts",BoxUI);
         reg("Libs/FixAdShareIcon.ts",FixAdShareIcon);
         reg("Libs/FixNodeY.ts",FixNodeY);
+        reg("View/CashRecordUI.ts",CashRecordUI);
         reg("View/FinishUI.ts",FinishUI);
         reg("View/FreeSkinUI.ts",FreeSkinUI);
         reg("View/GameUI.ts",GameUI);
@@ -43,6 +46,7 @@ export default class GameConfig{
         reg("View/OfflineUI.ts",OfflineUI);
         reg("View/OpenPacketsUI.ts",OpenPacketsUI);
         reg("View/SkinUI.ts",SkinUI);
+        reg("View/TakeCashUI.ts",TakeCashUI);
         reg("Crl/FixAiTips.ts",FixAiTips);
     }
 }

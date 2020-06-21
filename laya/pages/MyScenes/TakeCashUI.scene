@@ -2,9 +2,8 @@
     "x":0,
     "type":"Scene",
     "selectedBox":2,
-    "selecteID":4,
     "searchKey":"Scene",
-    "props":{"width":750,"sceneColor":"#000000","mouseThrough":false,"mouseEnabled":true,"height":1624},
+    "props":{"width":750,"sceneColor":"#000000","runtime":"View/TakeCashUI.ts","mouseThrough":false,"mouseEnabled":true,"height":1624},
     "nodeParent":-1,
     "maxID":22,
     "label":"Scene",
@@ -140,7 +139,6 @@
             "compId":12,
             "child":[
                 {
-                    "x":30,
                     "type":"Image",
                     "searchKey":"Image,item1",
                     "props":{"y":600,"x":170,"skin":"packetsUI/hb-kuang2.png","name":"item1","anchorY":0.5,"anchorX":0.5},
@@ -167,7 +165,6 @@
                         }]
                 },
                 {
-                    "x":30,
                     "type":"Image",
                     "searchKey":"Image,item2",
                     "props":{"y":600,"x":375,"skin":"packetsUI/hb-kuang.png","name":"item2","anchorY":0.5,"anchorX":0.5},
@@ -194,7 +191,6 @@
                         }]
                 },
                 {
-                    "x":30,
                     "type":"Image",
                     "searchKey":"Image,item3",
                     "props":{"y":600,"x":579,"skin":"packetsUI/hb-kuang.png","name":"item3","anchorY":0.5,"anchorX":0.5},
@@ -221,7 +217,6 @@
                         }]
                 },
                 {
-                    "x":30,
                     "type":"Image",
                     "searchKey":"Image,item4",
                     "props":{"y":800,"x":170,"skin":"packetsUI/hb-kuang.png","name":"item4","anchorY":0.5,"anchorX":0.5},

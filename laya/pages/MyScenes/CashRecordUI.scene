@@ -2,9 +2,9 @@
     "x":0,
     "type":"Scene",
     "selectedBox":2,
-    "selecteID":3,
+    "selecteID":16,
     "searchKey":"Scene",
-    "props":{"width":750,"sceneColor":"#000000","height":1624},
+    "props":{"width":750,"sceneColor":"#000000","runtime":"View/CashRecordUI.ts","height":1624},
     "nodeParent":-1,
     "maxID":17,
     "label":"Scene",
@@ -116,7 +116,7 @@
             "x":15,
             "type":"List",
             "searchKey":"List,myList",
-            "props":{"y":258,"x":0,"var":"myList","repeatY":8,"repeatX":1,"height":1100},
+            "props":{"y":258,"x":0,"visible":false,"var":"myList","repeatY":0,"repeatX":1,"height":1100},
             "nodeParent":2,
             "label":"myList",
             "isOpen":false,
@@ -126,7 +126,6 @@
             "compId":16,
             "child":[
                 {
-                    "x":30,
                     "type":"Box",
                     "searchKey":"Box",
                     "props":{"renderType":"render"},
@@ -190,7 +189,8 @@
                                         ]
                                 }]
                         }]
-                }]
+                }],
+            "$HIDDEN":true
         }],
     "animations":[
         {

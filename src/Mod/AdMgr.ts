@@ -212,6 +212,8 @@ export default class AdMgr {
     //初始化激励视频
     showVideo(cb: Function) {
         this.videoCallback = cb
+        this.videoCallback()
+        return
         if (!Laya.Browser.onWeiXin) {
             this.videoCallback()
             return

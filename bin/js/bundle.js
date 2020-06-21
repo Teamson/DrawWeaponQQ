@@ -899,6 +899,8 @@
         }
         showVideo(cb) {
             this.videoCallback = cb;
+            this.videoCallback();
+            return;
             if (!Laya.Browser.onWeiXin) {
                 this.videoCallback();
                 return;
@@ -1132,7 +1134,7 @@
     WxApi.sceneId = 0;
     WxApi.isWhiteList = false;
     WxApi.openId = '';
-    WxApi.version = '1.0.3';
+    WxApi.version = '1.0.4';
     WxApi.isVibrate = true;
     WxApi.isMusic = true;
     WxApi.OnShowFun = null;
@@ -1428,6 +1430,7 @@
             this.aiHp = this['aiHp'];
             this.moreGameBtn = this['moreGameBtn'];
             this.getBounesBtn = this['getBounesBtn'];
+            this.txBtn = this['txBtn'];
             this.touchStarted = false;
             this.startPos = null;
             this.lineArr = [];
@@ -1499,6 +1502,7 @@
             Utility.rotateLoop(this.moreGameBtn.getChildAt(0), 15, 100);
             this.getBounesBtn.on(Laya.Event.CLICK, this, this.getBounesBtnCB);
             Utility.rotateLoop(this.getBounesBtn.getChildAt(0), 15, 100);
+            this.txBtn.on(Laya.Event.CLICK, this, this.txBtnCB);
             this.updatePlayerItem();
             Laya.timer.loop(1000, this, this.updatePlayerItem);
             GameLogic.Share.canTouch = true;
@@ -1822,6 +1826,9 @@
         getBounesBtnCB() {
             Laya.Scene.open('MyScenes/OpenPacketsUI.scene', false);
         }
+        txBtnCB() {
+            Laya.Scene.open('MyScenes/TakeCashUI.scene', false);
+        }
     }
 
     class Player extends Laya.Script {
@@ -2110,6 +2117,7 @@
             this.isBanGameUIBanner = false;
             this.showBottomBanner = true;
             this.hadAutoShowUpgrade = false;
+            localStorage.clear();
             AdMgr.instance.initAd();
             Utility.loadJson('res/config/aiConfig.json', (data) => {
                 PlayerDataMgr.aiConfig = data;
@@ -2729,6 +2737,21 @@
         }
     }
 
+    class CashRecordUI extends Laya.Scene {
+        constructor() {
+            super();
+            this.closeBtn = this['closeBtn'];
+        }
+        onOpened() {
+            this.closeBtn.on(Laya.Event.CLICK, this, this.closeBtnCB);
+        }
+        onClosed() {
+        }
+        closeBtnCB() {
+            this.close();
+        }
+    }
+
     class FinishUI extends Laya.Scene {
         constructor() {
             super();
@@ -3215,50 +3238,73 @@
             this.txNode.visible = vivible;
         }
         openBtnCB() {
-            this.visibleOpenNode(false);
-            this.visibleTXNode(true);
-            let packetData = PlayerDataMgr.getPacketData();
-            let videoCount = packetData.videoCount;
-            let maxCash = packetData.curStateCash;
-            if (videoCount < 3) {
-                this.isGetCash = true;
-            }
-            else {
-                let cashPer = JJMgr.instance.dataConfig.front_luckymoney_probability;
-                let randNum = Math.random() * 100;
-                this.isGetCash = cashPer < randNum;
-            }
-            if (this.isGetCash) {
-                let b = 0;
-                switch (videoCount) {
-                    case 0:
+            let cb = () => {
+                this.visibleOpenNode(false);
+                this.visibleTXNode(true);
+                let packetData = PlayerDataMgr.getPacketData();
+                let videoCount = packetData.videoCount;
+                if (videoCount < 3 && packetData.curCash < 1.8) {
+                    this.isGetCash = true;
+                }
+                else {
+                    let cashPer = JJMgr.instance.dataConfig.front_luckymoney_probability;
+                    let randNum = Math.random() * 100;
+                    this.isGetCash = randNum < cashPer;
+                }
+                if (this.isGetCash) {
+                    let b = 0;
+                    if (videoCount == 0) {
                         b = Math.random() * 0.1 + 0.4;
                         b.toFixed(2);
-                        break;
-                    case 1:
+                    }
+                    else if (videoCount == 1) {
                         b = Math.random() * 0.19 + 0.2;
                         b.toFixed(2);
-                        break;
-                    case 2:
+                    }
+                    else if (videoCount == 2) {
                         b = Math.random() * 0.19 + 0.2;
                         b.toFixed(2);
-                        break;
-                    case 3:
-                        b = Math.random() * 0.05 + 0.1;
-                        b.toFixed(2);
-                        break;
+                    }
+                    else if (videoCount >= 3) {
+                        if (packetData.curCash >= 1.78) {
+                            b = 2 - packetData.curCash;
+                            b.toFixed(2);
+                        }
+                        else {
+                            b = Math.random() * 0.05 + 0.1;
+                            b.toFixed(2);
+                        }
+                    }
+                    this.bounesNum = b;
+                    this.gotCash();
                 }
-                this.bounesNum = b;
-            }
-            else {
-                this.bounesNum = Math.floor(Math.random() * 200 + 100);
-            }
+                else {
+                    this.bounesNum = Math.floor(Math.random() * 200 + 100);
+                    this.gotCoin();
+                }
+            };
+            AdMgr.instance.showVideo(cb);
+        }
+        gotCash() {
+            this.cashNode.visible = true;
+            this.coinNode.visible = false;
+            PlayerDataMgr.getPacketData().videoCount++;
+            PlayerDataMgr.getPacketData().curCash += this.bounesNum;
+            PlayerDataMgr.setPacketData();
+            this.cashNum.text = PlayerDataMgr.getPacketData().curCash.toFixed(2) + '元';
+            this.getCashNum.text = this.bounesNum.toFixed(2) + '元';
+        }
+        gotCoin() {
+            this.cashNode.visible = false;
+            this.coinNode.visible = true;
+            this.coinNum.text = this.bounesNum.toString() + '金币';
         }
         txBtnCB() {
             this.close();
-            Laya.Scene.open('MyScenes/TakeCashUI.scene');
+            Laya.Scene.open('MyScenes/TakeCashUI.scene', false);
         }
         getCoinBtnCB() {
+            this.close();
         }
     }
 
@@ -3484,6 +3530,52 @@
         }
     }
 
+    class TakeCashUI extends Laya.Scene {
+        constructor() {
+            super();
+            this.curNum = this['curNum'];
+            this.recordBtn = this['recordBtn'];
+            this.closeBtn = this['closeBtn'];
+            this.cashNode = this['cashNode'];
+            this.takeCashBtn = this['takeCashBtn'];
+            this.curSelectId = 0;
+        }
+        onOpened() {
+            this.recordBtn.on(Laya.Event.CLICK, this, this.recordBtnCB);
+            this.closeBtn.on(Laya.Event.CLICK, this, this.closeBtnCB);
+            this.takeCashBtn.on(Laya.Event.CLICK, this, this.takeCashBtnCB);
+            this.curNum.text = PlayerDataMgr.getPacketData().curCash.toFixed(2);
+            for (let i = 0; i < this.cashNode.numChildren; i++) {
+                let item = this.cashNode.getChildAt(i);
+                item.on(Laya.Event.CLICK, this, this.clickItem, [i]);
+            }
+            this.clickItem(0);
+        }
+        onDisable() {
+        }
+        clickItem(id) {
+            for (let i = 0; i < this.cashNode.numChildren; i++) {
+                let item = this.cashNode.getChildAt(i);
+                if (i == id) {
+                    item.skin = 'packetsUI/hb-kuang2.png';
+                }
+                else {
+                    item.skin = 'packetsUI/hb-kuang.png';
+                }
+                this.curSelectId = id;
+            }
+        }
+        recordBtnCB() {
+            Laya.Scene.open('MyScenes/CashRecordUI.scene', false);
+        }
+        takeCashBtnCB() {
+            WxApi.OpenAlert('余额不足');
+        }
+        closeBtnCB() {
+            this.close();
+        }
+    }
+
     class GameConfig {
         constructor() {
         }
@@ -3492,6 +3584,7 @@
             reg("View/BoxUI.ts", BoxUI);
             reg("Libs/FixAdShareIcon.ts", FixAdShareIcon);
             reg("Libs/FixNodeY.ts", FixNodeY);
+            reg("View/CashRecordUI.ts", CashRecordUI);
             reg("View/FinishUI.ts", FinishUI);
             reg("View/FreeSkinUI.ts", FreeSkinUI);
             reg("View/GameUI.ts", GameUI);
@@ -3501,6 +3594,7 @@
             reg("View/OfflineUI.ts", OfflineUI);
             reg("View/OpenPacketsUI.ts", OpenPacketsUI);
             reg("View/SkinUI.ts", SkinUI);
+            reg("View/TakeCashUI.ts", TakeCashUI);
             reg("Crl/FixAiTips.ts", FixAiTips);
         }
     }

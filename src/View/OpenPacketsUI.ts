@@ -1,6 +1,7 @@
 import PlayerDataMgr, { PacketData } from "../Libs/PlayerDataMgr"
 import WxApi from "../Libs/WxApi"
 import JJMgr from "../JJExport/Common/JJMgr"
+import AdMgr from "../Mod/AdMgr"
 
 export default class OpenPacketsUI extends Laya.Scene {
     constructor() {
@@ -45,51 +46,75 @@ export default class OpenPacketsUI extends Laya.Scene {
     }
 
     openBtnCB() {
-        this.visibleOpenNode(false)
-        this.visibleTXNode(true)
+        let cb = () => {
+            this.visibleOpenNode(false)
+            this.visibleTXNode(true)
 
-        let packetData: PacketData = PlayerDataMgr.getPacketData()
-        let videoCount: number = packetData.videoCount
-        let maxCash: number = packetData.curStateCash
-        if (videoCount < 3) {
-            this.isGetCash = true
-        } else {
-            let cashPer: number = JJMgr.instance.dataConfig.front_luckymoney_probability
-            let randNum: number = Math.random() * 100
-            this.isGetCash = cashPer < randNum
-        }
-        if (this.isGetCash) {
-            let b: number = 0
-            switch (videoCount) {
-                case 0:
+            let packetData: PacketData = PlayerDataMgr.getPacketData()
+            let videoCount: number = packetData.videoCount
+            if (packetData.curCash >= 1.8) {
+                this.isGetCash = false
+            }
+            else if (videoCount < 3) {
+                this.isGetCash = true
+            } else {
+                let cashPer: number = JJMgr.instance.dataConfig.front_luckymoney_probability
+                let randNum: number = Math.random() * 100
+                this.isGetCash = randNum < cashPer
+            }
+            if (this.isGetCash) {
+                let b: number = 0
+                if (videoCount == 0) {
                     b = Math.random() * 0.1 + 0.4
                     b.toFixed(2)
-                    break
-                case 1:
+                } else if (videoCount == 1) {
                     b = Math.random() * 0.19 + 0.2
                     b.toFixed(2)
-                    break
-                case 2:
+                } else if (videoCount == 2) {
                     b = Math.random() * 0.19 + 0.2
                     b.toFixed(2)
-                    break
-                case 3:
-                    b = Math.random() * 0.05 + 0.1
-                    b.toFixed(2)
-                    break
+                } else if (videoCount >= 3) {
+                    if (packetData.curCash >= 1.78) {
+                        b = 2 - packetData.curCash
+                        b.toFixed(2)
+                    } else {
+                        b = Math.random() * 0.05 + 0.1
+                        b.toFixed(2)
+                    }
+                }
+                this.bounesNum = b
+                this.gotCash()
+            } else {
+                this.bounesNum = Math.floor(Math.random() * 200 + 100)
+                this.gotCoin()
             }
-            this.bounesNum = b
-        } else {
-            this.bounesNum = Math.floor(Math.random() * 200 + 100)
         }
+
+        AdMgr.instance.showVideo(cb)
+    }
+
+    gotCash() {
+        this.cashNode.visible = true
+        this.coinNode.visible = false
+        PlayerDataMgr.getPacketData().videoCount++
+        PlayerDataMgr.getPacketData().curCash += this.bounesNum
+        PlayerDataMgr.setPacketData()
+        this.cashNum.text = PlayerDataMgr.getPacketData().curCash.toFixed(2) + '元'
+        this.getCashNum.text = this.bounesNum.toFixed(2) + '元'
+    }
+    gotCoin() {
+        PlayerDataMgr.changeCoin(this.bounesNum)
+        this.cashNode.visible = false
+        this.coinNode.visible = true
+        this.coinNum.text = this.bounesNum.toString() + '金币'
     }
 
     txBtnCB() {
         this.close()
-        Laya.Scene.open('MyScenes/TakeCashUI.scene')
+        Laya.Scene.open('MyScenes/TakeCashUI.scene', false)
     }
 
     getCoinBtnCB() {
-
+        this.close()
     }
 }
