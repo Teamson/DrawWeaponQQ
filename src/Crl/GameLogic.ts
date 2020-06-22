@@ -49,7 +49,7 @@ export default class GameLogic {
     public showBottomBanner: boolean = true
 
     constructor() {
-        localStorage.clear()
+        //localStorage.clear()
         //初始化广告
         AdMgr.instance.initAd()
         //加载JSON
@@ -90,9 +90,6 @@ export default class GameLogic {
             if (Laya.Browser.onWeiXin) {
                 WxApi.sceneId = WxApi.GetLaunchPassVar().scene
                 console.log('sceneId:', WxApi.sceneId)
-                // Laya.Browser.window.qq.onShow((para) => {
-                //     WxApi.sceneId = para.scene
-                // })
                 if (!localStorage.getItem('WhiteList')) {
                     WxApi.isWhiteList = WxApi.allowScene()
                     localStorage.setItem('WhiteList', WxApi.isWhiteList ? '1' : '0')
@@ -101,6 +98,14 @@ export default class GameLogic {
                     WxApi.isWhiteList = wl == '1'
                 }
                 console.log('WxApi.isWhiteList:', WxApi.isWhiteList)
+
+                if (!localStorage.getItem('PacketWhiteList')) {
+                    WxApi.isPacketWhiteList = WxApi.allowPacketScene()
+                    localStorage.setItem('PacketWhiteList', WxApi.isPacketWhiteList ? '1' : '0')
+                } else {
+                    let wl = localStorage.getItem('PacketWhiteList')
+                    WxApi.isPacketWhiteList = wl == '1'
+                }
             }
         })
     }
@@ -408,12 +413,24 @@ export default class GameLogic {
                 Laya.Scene.close('MyScenes/GameUI.scene')
                 if (JJMgr.instance.dataConfig.front_box_page && WxApi.isValidBanner()) {
                     Laya.Scene.open('MyScenes/KillBossUI.scene', true, () => {
-                        this._playerNode.active = true
-                        Laya.Scene.open('MyScenes/FinishUI.scene', false)
+                        WxApi.closePacketUICB = () => {
+                            this._playerNode.active = true
+                            Laya.Scene.open('MyScenes/FinishUI.scene', false)
+                        }
+                        Laya.Scene.open('MyScenes/OpenPacketsUI.scene', false)
+                        // this._playerNode.active = true
+                        // Laya.Scene.open('MyScenes/FinishUI.scene', false)
                     })
                     this._playerNode.active = false
                 } else {
-                    Laya.Scene.open('MyScenes/FinishUI.scene', false)
+                    if (WxApi.isValidPacket()) {
+                        WxApi.closePacketUICB = () => {
+                            Laya.Scene.open('MyScenes/FinishUI.scene', false)
+                        }
+                        Laya.Scene.open('MyScenes/OpenPacketsUI.scene', false)
+                    } else {
+                        Laya.Scene.open('MyScenes/FinishUI.scene', false)
+                    }
                 }
                 return
             }
@@ -460,10 +477,16 @@ export default class GameLogic {
 
             if (JJMgr.instance.dataConfig.front_box_page && WxApi.isValidBanner()) {
                 Laya.Scene.open('MyScenes/KillBossUI.scene', false, () => {
-                    cb()
+                    WxApi.closePacketUICB = cb
+                    Laya.Scene.open('MyScenes/OpenPacketsUI.scene', false)
                 })
             } else {
-                cb()
+                if (WxApi.isValidPacket()) {
+                    WxApi.closePacketUICB = cb
+                    Laya.Scene.open('MyScenes/OpenPacketsUI.scene', false)
+                } else {
+                    cb()
+                }
             }
         }
     }
@@ -491,7 +514,8 @@ export default class GameLogic {
             AdMgr.instance.hideBanner()
             GameUI.Share.reviveBtnCB()
         } else {
-            this.showBottomBanner = false
+            //AdMgr.instance.hideBanner()
+            this.showBottomBanner = true
             this.readyGo()
         }
     }

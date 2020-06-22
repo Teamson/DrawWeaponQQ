@@ -2,7 +2,7 @@
     "x":0,
     "type":"Scene",
     "selectedBox":2,
-    "selecteID":25,
+    "selecteID":9,
     "searchKey":"Scene",
     "props":{"width":750,"sceneColor":"#000000","runtime":"View/OpenPacketsUI.ts","mouseThrough":false,"mouseEnabled":true,"height":1624},
     "nodeParent":-1,
@@ -119,14 +119,13 @@
             "props":{"y":600,"x":375,"visible":false,"var":"txNode"},
             "nodeParent":2,
             "label":"txNode",
-            "isOpen":true,
+            "isOpen":false,
             "isDirectory":true,
             "isAniNode":true,
             "hasChild":true,
             "compId":9,
             "child":[
                 {
-                    "x":30,
                     "type":"Script",
                     "switchAble":true,
                     "source":"src/Libs/FixNodeY.ts",
@@ -143,7 +142,6 @@
                         ]
                 },
                 {
-                    "x":30,
                     "type":"Image",
                     "searchKey":"Image",
                     "props":{"y":0,"x":27,"skin":"packetsUI/hb-hb6.png","anchorY":0.5,"anchorX":0.5},
@@ -157,7 +155,6 @@
                         ]
                 },
                 {
-                    "x":30,
                     "type":"Image",
                     "searchKey":"Image,closeTxBtn",
                     "props":{"y":-348,"x":-234,"var":"closeTxBtn","skin":"packetsUI/hb-x.png","anchorY":0.5,"anchorX":0.5},
@@ -171,13 +168,12 @@
                         ]
                 },
                 {
-                    "x":30,
                     "type":"Sprite",
                     "searchKey":"Sprite,cashNode",
                     "props":{"var":"cashNode"},
                     "nodeParent":9,
                     "label":"cashNode",
-                    "isOpen":false,
+                    "isOpen":true,
                     "isDirectory":true,
                     "isAniNode":true,
                     "hasChild":true,
@@ -212,7 +208,7 @@
                         {
                             "type":"Label",
                             "searchKey":"Label,cashNum",
-                            "props":{"y":-219,"x":0,"var":"cashNum","text":"6.66元","fontSize":40,"font":"Arial","color":"#df721e","anchorY":0.5,"anchorX":0},
+                            "props":{"y":-219,"x":0,"var":"cashNum","text":"0.00元","fontSize":40,"font":"Arial","color":"#df721e","anchorY":0.5,"anchorX":0},
                             "nodeParent":13,
                             "label":"cashNum",
                             "isDirectory":false,
@@ -225,7 +221,7 @@
                         {
                             "type":"Label",
                             "searchKey":"Label,getCashNum",
-                            "props":{"y":-109.375,"x":0,"var":"getCashNum","text":"6.66元","fontSize":88,"font":"Arial","color":"#eb000a","anchorY":0.5,"anchorX":0.5},
+                            "props":{"y":-109.375,"x":0,"var":"getCashNum","text":"0.00元","fontSize":88,"font":"Arial","color":"#eb000a","anchorY":0.5,"anchorX":0.5},
                             "nodeParent":13,
                             "label":"getCashNum",
                             "isDirectory":false,
@@ -274,10 +270,9 @@
                                         ]
                                 }]
                         }],
-                    "$HIDDEN":true
+                    "$HIDDEN":false
                 },
                 {
-                    "x":30,
                     "type":"Sprite",
                     "searchKey":"Sprite,coinNode",
                     "props":{"var":"coinNode"},
@@ -290,7 +285,6 @@
                     "compId":21,
                     "child":[
                         {
-                            "x":45,
                             "type":"Image",
                             "searchKey":"Image",
                             "props":{"y":-310,"x":0,"skin":"packetsUI/hb-wz13.png","anchorY":0.5,"anchorX":0.5},
@@ -304,7 +298,6 @@
                                 ]
                         },
                         {
-                            "x":45,
                             "type":"Image",
                             "searchKey":"Image",
                             "props":{"y":-180,"x":0,"skin":"packetsUI/hb-jb.png","anchorY":0.5,"anchorX":0.5},
@@ -318,10 +311,9 @@
                                 ]
                         },
                         {
-                            "x":45,
                             "type":"Label",
                             "searchKey":"Label,coinNum",
-                            "props":{"y":-40,"x":0,"var":"coinNum","text":"300金币","fontSize":88,"font":"Arial","color":"#eb000a","anchorY":0.5,"anchorX":0.5},
+                            "props":{"y":-40,"x":0,"var":"coinNum","text":"0金币","fontSize":88,"font":"Arial","color":"#eb000a","anchorY":0.5,"anchorX":0.5},
                             "nodeParent":21,
                             "label":"coinNum",
                             "isDirectory":false,
@@ -332,7 +324,6 @@
                                 ]
                         },
                         {
-                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,getCoinBtn",
                             "props":{"y":290,"x":0,"visible":true,"var":"getCoinBtn","skin":"packetsUI/hb-an.png","anchorY":0.5,"anchorX":0.5},
@@ -345,7 +336,6 @@
                             "compId":25,
                             "child":[
                                 {
-                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image",
                                     "props":{"y":46,"x":247,"skin":"packetsUI/hb-wz7.png","anchorY":0.5,"anchorX":0.5},
@@ -360,7 +350,7 @@
                                 }],
                             "$HIDDEN":false
                         }],
-                    "$HIDDEN":false
+                    "$HIDDEN":true
                 }],
             "$HIDDEN":false
         }],

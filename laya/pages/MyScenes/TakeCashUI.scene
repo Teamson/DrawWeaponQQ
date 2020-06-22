@@ -2,10 +2,11 @@
     "x":0,
     "type":"Scene",
     "selectedBox":2,
+    "selecteID":4,
     "searchKey":"Scene",
     "props":{"width":750,"sceneColor":"#000000","runtime":"View/TakeCashUI.ts","mouseThrough":false,"mouseEnabled":true,"height":1624},
     "nodeParent":-1,
-    "maxID":22,
+    "maxID":23,
     "label":"Scene",
     "isOpen":true,
     "isDirectory":true,
@@ -73,7 +74,7 @@
             "x":15,
             "type":"Label",
             "searchKey":"Label,curNum",
-            "props":{"y":265,"x":375,"var":"curNum","text":"6.66","fontSize":100,"font":"Arial","color":"#fffbab","bold":false,"anchorY":0.5,"anchorX":0.5},
+            "props":{"y":265,"x":375,"var":"curNum","text":"0.00","fontSize":100,"font":"Arial","color":"#fffbab","bold":false,"anchorY":0.5,"anchorX":0.5},
             "nodeParent":2,
             "label":"curNum",
             "isDirectory":false,
@@ -254,6 +255,20 @@
             "isAniNode":true,
             "hasChild":false,
             "compId":21,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
+            "type":"Image",
+            "searchKey":"Image",
+            "props":{"y":1200,"x":375,"skin":"packetsUI/hb-wz14.png","anchorY":0.5,"anchorX":0.5},
+            "nodeParent":2,
+            "label":"Image",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "compId":22,
             "child":[
                 ]
         }],

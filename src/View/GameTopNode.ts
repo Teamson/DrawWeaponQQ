@@ -38,10 +38,16 @@ export default class GameTopNode extends Laya.Script {
 
         (this.txNode.getChildByName('txBtn') as Laya.Image).on(Laya.Event.CLICK, this, this.txBtnCB);
         Laya.timer.frameLoop(2, this, () => {
-            (this.txNode.getChildByName('curNum') as Laya.Label).text = PlayerDataMgr.getPacketData().curCash.toFixed(2);
+            (this.txNode.getChildByName('curNum') as Laya.Label).text = PlayerDataMgr.getPacketData().curCash.toFixed(2) + '元';
         })
+
+        this.txNode.visible = WxApi.isValidPacket()
     }
     txBtnCB() {
+        WxApi.closePacketUICB = () => {
+            GameLogic.Share.pauseGame = false
+        }
+        GameLogic.Share.pauseGame = true
         Laya.Scene.open('MyScenes/TakeCashUI.scene', false)
     }
 

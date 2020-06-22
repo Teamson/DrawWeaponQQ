@@ -131,6 +131,7 @@ export default class GameUI extends Laya.Scene {
 
         this.getBounesBtn.on(Laya.Event.CLICK, this, this.getBounesBtnCB)
         Utility.rotateLoop(this.getBounesBtn.getChildAt(0), 15, 100)
+        this.getBounesBtn.visible = WxApi.isValidPacket()
 
         this.updatePlayerItem()
         Laya.timer.loop(1000, this, this.updatePlayerItem)
@@ -373,11 +374,13 @@ export default class GameUI extends Laya.Scene {
         if (visible)
             AdMgr.instance.hideBanner()
         else {
-            if (GameLogic.Share.showBottomBanner) {
-                AdMgr.instance.showBanner()
-            } else {
-                GameLogic.Share.showBottomBanner = true
-            }
+            AdMgr.instance.hideBanner()
+            AdMgr.instance.showBanner()
+            // if (GameLogic.Share.showBottomBanner) {
+            //     AdMgr.instance.showBanner()
+            // } else {
+            //     GameLogic.Share.showBottomBanner = true
+            // }
         }
     }
 
@@ -496,6 +499,10 @@ export default class GameUI extends Laya.Scene {
     }
 
     getBounesBtnCB() {
+        WxApi.closePacketUICB = () => {
+            GameLogic.Share.pauseGame = false
+        }
+        GameLogic.Share.pauseGame = true
         Laya.Scene.open('MyScenes/OpenPacketsUI.scene', false)
     }
 }

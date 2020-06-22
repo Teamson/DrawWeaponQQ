@@ -101,7 +101,7 @@ export default class KillBossUI extends Laya.Scene {
 
         if (!this.hadShowBanner && curG >= JJMgr.instance.dataConfig.front_box_gate && gGap && WxApi.isValidBanner() && JJMgr.instance.dataConfig.front_box_page) {
             this.hadShowBanner = true
-            Laya.timer.once(1000, this, () => {
+            Laya.timer.once(500, this, () => {
                 AdMgr.instance.showBanner()
             })
         }
@@ -138,7 +138,7 @@ export default class KillBossUI extends Laya.Scene {
         if (!this.hadShowBanner && curG >= JJMgr.instance.dataConfig.front_box_gate && gGap && WxApi.isValidBanner() &&
             this.canShowBox && JJMgr.instance.dataConfig.front_box_page) {
             this.hadShowBanner = true
-            Laya.timer.once(1000, this, () => {
+            Laya.timer.once(500, this, () => {
                 AdMgr.instance.showAppBox()
             })
         }

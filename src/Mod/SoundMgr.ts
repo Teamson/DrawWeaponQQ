@@ -21,7 +21,8 @@ export default class SoundMgr {
             { url: 'res/sounds/weaponHit2.mp3', type: Laya.Loader.SOUND },
             { url: 'res/sounds/weaponHit3.mp3', type: Laya.Loader.SOUND },
             { url: 'res/sounds/weaponHit4.mp3', type: Laya.Loader.SOUND },
-            { url: 'res/sounds/weaponReady.mp3', type: Laya.Loader.SOUND }
+            { url: 'res/sounds/weaponReady.mp3', type: Laya.Loader.SOUND },
+            { url: 'res/sounds/money.mp3', type: Laya.Loader.SOUND }
         ];
         Laya.loader.load(resUrl, Laya.Handler.create(this, fun));
 

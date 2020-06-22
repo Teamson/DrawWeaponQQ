@@ -2,6 +2,8 @@ import PlayerDataMgr, { PacketData } from "../Libs/PlayerDataMgr"
 import WxApi from "../Libs/WxApi"
 import JJMgr from "../JJExport/Common/JJMgr"
 import AdMgr from "../Mod/AdMgr"
+import SoundMgr from "../Mod/SoundMgr"
+import GameLogic from "../Crl/GameLogic"
 
 export default class OpenPacketsUI extends Laya.Scene {
     constructor() {
@@ -26,15 +28,21 @@ export default class OpenPacketsUI extends Laya.Scene {
     bounesNum: number = 0
 
     onOpened() {
+        AdMgr.instance.hideBanner()
+        AdMgr.instance.showBanner()
+
         this.openBtn.on(Laya.Event.CLICK, this, this.openBtnCB)
-        this.closeOpenNodeBtn.on(Laya.Event.CLICK, this, this.close)
-        this.closeTxBtn.on(Laya.Event.CLICK, this, this.close)
+        this.closeOpenNodeBtn.on(Laya.Event.CLICK, this, this.closeCB)
+        this.closeTxBtn.on(Laya.Event.CLICK, this, this.closeCB)
         this.tixianBtn.on(Laya.Event.CLICK, this, this.txBtnCB)
         this.getCoinBtn.on(Laya.Event.CLICK, this, this.getCoinBtnCB)
     }
 
     onClosed() {
-
+        AdMgr.instance.hideBanner()
+        if (GameLogic.Share.gameStarted) {
+            AdMgr.instance.showBanner()
+        }
     }
 
     visibleOpenNode(vivible: boolean) {
@@ -52,37 +60,43 @@ export default class OpenPacketsUI extends Laya.Scene {
 
             let packetData: PacketData = PlayerDataMgr.getPacketData()
             let videoCount: number = packetData.videoCount
-            if (packetData.curCash >= 1.8) {
+            console.log('packetData.curCash:', packetData.curCash)
+            if (parseFloat(packetData.curCash.toFixed(2)) >= 1.8) {
                 this.isGetCash = false
-            }
-            else if (videoCount < 3) {
-                this.isGetCash = true
             } else {
-                let cashPer: number = JJMgr.instance.dataConfig.front_luckymoney_probability
-                let randNum: number = Math.random() * 100
-                this.isGetCash = randNum < cashPer
+                if (videoCount < 3) {
+                    this.isGetCash = true
+                } else {
+                    let cashPer: number = JJMgr.instance.dataConfig.front_luckymoney_probability
+                    let randNum: number = Math.random() * 100
+                    this.isGetCash = randNum < cashPer
+                }
             }
+
             if (this.isGetCash) {
                 let b: number = 0
                 if (videoCount == 0) {
                     b = Math.random() * 0.1 + 0.4
-                    b.toFixed(2)
+                    b = parseFloat(b.toFixed(2))
                 } else if (videoCount == 1) {
                     b = Math.random() * 0.19 + 0.2
-                    b.toFixed(2)
+                    b = parseFloat(b.toFixed(2))
                 } else if (videoCount == 2) {
                     b = Math.random() * 0.19 + 0.2
-                    b.toFixed(2)
+                    b = parseFloat(b.toFixed(2))
                 } else if (videoCount >= 3) {
                     if (packetData.curCash >= 1.78) {
                         b = 2 - packetData.curCash
-                        b.toFixed(2)
+                        b = parseFloat(b.toFixed(2))
                     } else {
                         b = Math.random() * 0.05 + 0.1
-                        b.toFixed(2)
+                        b = parseFloat(b.toFixed(2))
                     }
                 }
                 this.bounesNum = b
+                if (this.bounesNum + PlayerDataMgr.getPacketData().curCash > 1.8) {
+                    this.bounesNum = parseFloat((1.8 - PlayerDataMgr.getPacketData().curCash).toFixed(2))
+                }
                 this.gotCash()
             } else {
                 this.bounesNum = Math.floor(Math.random() * 200 + 100)
@@ -94,15 +108,21 @@ export default class OpenPacketsUI extends Laya.Scene {
     }
 
     gotCash() {
+        Laya.timer.once(500, this, () => {
+            SoundMgr.instance.playSoundEffect('money.mp3')
+        })
         this.cashNode.visible = true
         this.coinNode.visible = false
         PlayerDataMgr.getPacketData().videoCount++
-        PlayerDataMgr.getPacketData().curCash += this.bounesNum
+        PlayerDataMgr.getPacketData().curCash += parseFloat(this.bounesNum.toFixed(2))
         PlayerDataMgr.setPacketData()
         this.cashNum.text = PlayerDataMgr.getPacketData().curCash.toFixed(2) + '元'
         this.getCashNum.text = this.bounesNum.toFixed(2) + '元'
     }
     gotCoin() {
+        Laya.timer.once(500, this, () => {
+            SoundMgr.instance.playSoundEffect('getCoin.mp3')
+        })
         PlayerDataMgr.changeCoin(this.bounesNum)
         this.cashNode.visible = false
         this.coinNode.visible = true
@@ -115,6 +135,13 @@ export default class OpenPacketsUI extends Laya.Scene {
     }
 
     getCoinBtnCB() {
+        WxApi.OpenAlert('恭喜获得金币')
+        this.closeCB()
+    }
+
+    closeCB() {
         this.close()
+        WxApi.closePacketUICB && WxApi.closePacketUICB()
+        WxApi.closePacketUICB = null
     }
 }

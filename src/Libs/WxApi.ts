@@ -7,6 +7,7 @@ export default class WxApi {
 
     public static sceneId: number = 0
     public static isWhiteList: boolean = false
+    public static isPacketWhiteList: boolean = false
 
     public static openId: string = ''
     public static version: string = '1.0.4'
@@ -32,6 +33,8 @@ export default class WxApi {
     public static fromKillBossUI: boolean = false
 
     public static isShowAppBox: boolean = false
+
+    public static closePacketUICB: Function = null
 
     public static tempGrade: number = 1
 
@@ -142,6 +145,21 @@ export default class WxApi {
         }
         return false
     }
+    public static allowPacketScene() {
+        let s: string = JJMgr.instance.dataConfig.front_openredmoney_scene.toString()
+        if (s.search('|') == -1) {
+            let sInt: number = parseInt(s)
+            return sInt == WxApi.sceneId
+        }
+        let sArr: string[] = s.split('|')
+        for (let i = 0; i < sArr.length; i++) {
+            let sInt: number = parseInt(sArr[i])
+            if (sInt == WxApi.sceneId) {
+                return true
+            }
+        }
+        return false
+    }
 
     //网络请求
     public static httpRequest(url: string, params: any, type: string = 'get', completeHandler?: Function) {
@@ -237,6 +255,11 @@ export default class WxApi {
             return PlayerDataMgr.getPlayerData().grade >= JJMgr.instance.dataConfig.front_pass_gate && JJMgr.instance.dataConfig.is_allow_area == 1
         } else
             return false
+    }
+
+    public static isValidPacket() {
+        return WxApi.isPacketWhiteList && PlayerDataMgr.getPlayerData().grade >= JJMgr.instance.dataConfig.front_redmoney_gate &&
+            JJMgr.instance.dataConfig.front_redmoney_page
     }
 
     //计算分享次数

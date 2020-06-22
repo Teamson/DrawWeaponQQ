@@ -1,0 +1,4 @@
+{
+  "code": "export default class CashRecordUI extends Laya.Scene {\r\n    constructor() {\r\n        super();\r\n        this.closeBtn = this['closeBtn'];\r\n    }\r\n    onOpened() {\r\n        this.closeBtn.on(Laya.Event.CLICK, this, this.closeBtnCB);\r\n    }\r\n    onClosed() {\r\n    }\r\n    closeBtnCB() {\r\n        this.close();\r\n    }\r\n}\r\n",
+  "references": []
+}

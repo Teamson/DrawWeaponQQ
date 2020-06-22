@@ -637,7 +637,8 @@
                 { url: 'res/sounds/weaponHit2.mp3', type: Laya.Loader.SOUND },
                 { url: 'res/sounds/weaponHit3.mp3', type: Laya.Loader.SOUND },
                 { url: 'res/sounds/weaponHit4.mp3', type: Laya.Loader.SOUND },
-                { url: 'res/sounds/weaponReady.mp3', type: Laya.Loader.SOUND }
+                { url: 'res/sounds/weaponReady.mp3', type: Laya.Loader.SOUND },
+                { url: 'res/sounds/money.mp3', type: Laya.Loader.SOUND }
             ];
             Laya.loader.load(resUrl, Laya.Handler.create(this, fun));
             Laya.SoundManager.useAudioMusic = true;
@@ -743,7 +744,7 @@
 
     class AdMgr {
         constructor() {
-            this.bannerUnitId = ['947d377267bea06eb446afe81328d792', '8a7c0bf18bb869abc182b7110fd70145'];
+            this.bannerUnitId = ['66e1008c167595adbc5450df9686edb8', 'cda95c4ef7ef0a6bfe3390e79c3f3069', '947d377267bea06eb446afe81328d792', '8a7c0bf18bb869abc182b7110fd70145'];
             this.videoUnitId = '32351da471a086273478425fb7f99aab';
             this.appBoxUnitId = 'e72c06906c7b12b06cfe70145816b8ed';
             this.bannerAd = null;
@@ -807,41 +808,30 @@
                 this.appBoxCloseCB = null;
             }
         }
-        initBanner() {
-            let isIphonex = false;
-            if (Laya.Browser.onWeiXin) {
-                Laya.Browser.window.qq.getSystemInfo({
-                    success: res => {
-                        let modelmes = res.model;
-                        if (modelmes.search('iPhone X') != -1) {
-                            isIphonex = true;
-                        }
-                    }
-                });
+        initBanner(isShow) {
+            if (this.bannerAd != null) {
+                this.destroyBanner();
             }
+            this.isBannerError = false;
             let winSize = Laya.Browser.window.qq.getSystemInfoSync();
             this.bannerAd = Laya.Browser.window.qq.createBannerAd({
                 adUnitId: this.bannerUnitId[this.curBannerId],
                 style: {
                     left: 0,
-                    top: 0,
-                    width: 750,
-                    height: 0
+                    top: winSize.windowHeight - 100,
+                    width: winSize.windowWidth
                 }
             });
             this.bannerAd.onResize(res => {
-                if (isIphonex) {
-                    this.bannerAd.style.top = winSize.windowHeight - res.height - 10;
-                }
-                else {
-                    this.bannerAd.style.top = winSize.windowHeight - res.height;
-                }
+                this.bannerAd.style.top = winSize.windowHeight - res.height;
                 this.bannerAd.style.left = winSize.windowWidth / 2 - res.width / 2;
             });
             this.bannerAd.onError(res => {
                 console.log('banner error:', JSON.stringify(res));
                 this.isBannerError = true;
             });
+            if (isShow)
+                this.bannerAd.show();
         }
         hideBanner(isCount = true) {
             if (Laya.Browser.onWeiXin) {
@@ -853,14 +843,13 @@
                         this.curBannerId = 0;
                     }
                     console.log('destroy banner');
-                    this.bannerAd.destroy();
-                    this.bannerAd = null;
+                    this.destroyBanner();
                     this.initBanner();
                 }
             }
         }
         showBanner() {
-            if (Laya.Browser.onWeiXin) {
+            if (Laya.Browser.onWeiXin && this.bannerAd) {
                 this.showBannerCount++;
                 this.bannerAd.show();
                 console.log('showBanner :', this.showBannerCount);
@@ -899,8 +888,6 @@
         }
         showVideo(cb) {
             this.videoCallback = cb;
-            this.videoCallback();
-            return;
             if (!Laya.Browser.onWeiXin) {
                 this.videoCallback();
                 return;
@@ -1032,6 +1019,21 @@
             }
             return false;
         }
+        static allowPacketScene() {
+            let s = JJMgr.instance.dataConfig.front_openredmoney_scene.toString();
+            if (s.search('|') == -1) {
+                let sInt = parseInt(s);
+                return sInt == WxApi.sceneId;
+            }
+            let sArr = s.split('|');
+            for (let i = 0; i < sArr.length; i++) {
+                let sInt = parseInt(sArr[i]);
+                if (sInt == WxApi.sceneId) {
+                    return true;
+                }
+            }
+            return false;
+        }
         static httpRequest(url, params, type = 'get', completeHandler) {
             var xhr = new Laya.HttpRequest();
             xhr.http.timeout = 5000;
@@ -1115,6 +1117,10 @@
             else
                 return false;
         }
+        static isValidPacket() {
+            return WxApi.isPacketWhiteList && PlayerDataMgr.getPlayerData().grade >= JJMgr.instance.dataConfig.front_redmoney_gate &&
+                JJMgr.instance.dataConfig.front_redmoney_page;
+        }
         static calculateShareNumber() {
             if (localStorage.getItem('lastDate')) {
                 if (new Date().getDate() == parseInt(localStorage.getItem('lastDate'))) {
@@ -1133,6 +1139,7 @@
     WxApi.UnityPath = 'LayaScene_MyScene/Conventional/';
     WxApi.sceneId = 0;
     WxApi.isWhiteList = false;
+    WxApi.isPacketWhiteList = false;
     WxApi.openId = '';
     WxApi.version = '1.0.4';
     WxApi.isVibrate = true;
@@ -1151,6 +1158,7 @@
     WxApi.isKillBossUI = false;
     WxApi.fromKillBossUI = false;
     WxApi.isShowAppBox = false;
+    WxApi.closePacketUICB = null;
     WxApi.tempGrade = 1;
 
     class Boss extends Laya.Script {
@@ -1264,6 +1272,18 @@
             this.calculateTime();
             Laya.timer.loop(1000, this, this.calculateTime);
             this.initData();
+            this.txNode.getChildByName('txBtn').on(Laya.Event.CLICK, this, this.txBtnCB);
+            Laya.timer.frameLoop(2, this, () => {
+                this.txNode.getChildByName('curNum').text = PlayerDataMgr.getPacketData().curCash.toFixed(2) + '元';
+            });
+            this.txNode.visible = WxApi.isValidPacket();
+        }
+        txBtnCB() {
+            WxApi.closePacketUICB = () => {
+                GameLogic.Share.pauseGame = false;
+            };
+            GameLogic.Share.pauseGame = true;
+            Laya.Scene.open('MyScenes/TakeCashUI.scene', false);
         }
         initData() {
             this.coinNum.value = PlayerDataMgr.getPlayerData().coin.toString();
@@ -1279,6 +1299,9 @@
         }
         onDisable() {
             Laya.timer.clearAll(this);
+        }
+        onUpdate() {
+            this.coinNum.value = PlayerDataMgr.getPlayerData().coin.toString();
         }
         calculateTime() {
             let t = TimeCountMgr.Share.tCount;
@@ -1430,7 +1453,6 @@
             this.aiHp = this['aiHp'];
             this.moreGameBtn = this['moreGameBtn'];
             this.getBounesBtn = this['getBounesBtn'];
-            this.txBtn = this['txBtn'];
             this.touchStarted = false;
             this.startPos = null;
             this.lineArr = [];
@@ -1502,7 +1524,7 @@
             Utility.rotateLoop(this.moreGameBtn.getChildAt(0), 15, 100);
             this.getBounesBtn.on(Laya.Event.CLICK, this, this.getBounesBtnCB);
             Utility.rotateLoop(this.getBounesBtn.getChildAt(0), 15, 100);
-            this.txBtn.on(Laya.Event.CLICK, this, this.txBtnCB);
+            this.getBounesBtn.visible = WxApi.isValidPacket();
             this.updatePlayerItem();
             Laya.timer.loop(1000, this, this.updatePlayerItem);
             GameLogic.Share.canTouch = true;
@@ -1710,12 +1732,8 @@
             if (visible)
                 AdMgr.instance.hideBanner();
             else {
-                if (GameLogic.Share.showBottomBanner) {
-                    AdMgr.instance.showBanner();
-                }
-                else {
-                    GameLogic.Share.showBottomBanner = true;
-                }
+                AdMgr.instance.hideBanner();
+                AdMgr.instance.showBanner();
             }
         }
         closeAppCB() {
@@ -1824,10 +1842,11 @@
             GameTopNode.Share.initData();
         }
         getBounesBtnCB() {
+            WxApi.closePacketUICB = () => {
+                GameLogic.Share.pauseGame = false;
+            };
+            GameLogic.Share.pauseGame = true;
             Laya.Scene.open('MyScenes/OpenPacketsUI.scene', false);
-        }
-        txBtnCB() {
-            Laya.Scene.open('MyScenes/TakeCashUI.scene', false);
         }
     }
 
@@ -2117,7 +2136,6 @@
             this.isBanGameUIBanner = false;
             this.showBottomBanner = true;
             this.hadAutoShowUpgrade = false;
-            localStorage.clear();
             AdMgr.instance.initAd();
             Utility.loadJson('res/config/aiConfig.json', (data) => {
                 PlayerDataMgr.aiConfig = data;
@@ -2152,6 +2170,14 @@
                         WxApi.isWhiteList = wl == '1';
                     }
                     console.log('WxApi.isWhiteList:', WxApi.isWhiteList);
+                    if (!localStorage.getItem('PacketWhiteList')) {
+                        WxApi.isPacketWhiteList = WxApi.allowPacketScene();
+                        localStorage.setItem('PacketWhiteList', WxApi.isPacketWhiteList ? '1' : '0');
+                    }
+                    else {
+                        let wl = localStorage.getItem('PacketWhiteList');
+                        WxApi.isPacketWhiteList = wl == '1';
+                    }
                 }
             });
         }
@@ -2419,13 +2445,24 @@
                     Laya.Scene.close('MyScenes/GameUI.scene');
                     if (JJMgr.instance.dataConfig.front_box_page && WxApi.isValidBanner()) {
                         Laya.Scene.open('MyScenes/KillBossUI.scene', true, () => {
-                            this._playerNode.active = true;
-                            Laya.Scene.open('MyScenes/FinishUI.scene', false);
+                            WxApi.closePacketUICB = () => {
+                                this._playerNode.active = true;
+                                Laya.Scene.open('MyScenes/FinishUI.scene', false);
+                            };
+                            Laya.Scene.open('MyScenes/OpenPacketsUI.scene', false);
                         });
                         this._playerNode.active = false;
                     }
                     else {
-                        Laya.Scene.open('MyScenes/FinishUI.scene', false);
+                        if (WxApi.isValidPacket()) {
+                            WxApi.closePacketUICB = () => {
+                                Laya.Scene.open('MyScenes/FinishUI.scene', false);
+                            };
+                            Laya.Scene.open('MyScenes/OpenPacketsUI.scene', false);
+                        }
+                        else {
+                            Laya.Scene.open('MyScenes/FinishUI.scene', false);
+                        }
                     }
                     return;
                 }
@@ -2468,11 +2505,18 @@
                 WxApi.tempGrade = PlayerDataMgr.getPlayerData().grade;
                 if (JJMgr.instance.dataConfig.front_box_page && WxApi.isValidBanner()) {
                     Laya.Scene.open('MyScenes/KillBossUI.scene', false, () => {
-                        cb();
+                        WxApi.closePacketUICB = cb;
+                        Laya.Scene.open('MyScenes/OpenPacketsUI.scene', false);
                     });
                 }
                 else {
-                    cb();
+                    if (WxApi.isValidPacket()) {
+                        WxApi.closePacketUICB = cb;
+                        Laya.Scene.open('MyScenes/OpenPacketsUI.scene', false);
+                    }
+                    else {
+                        cb();
+                    }
                 }
             }
         }
@@ -2499,7 +2543,7 @@
                 GameUI.Share.reviveBtnCB();
             }
             else {
-                this.showBottomBanner = false;
+                this.showBottomBanner = true;
                 this.readyGo();
             }
         }
@@ -2977,7 +3021,7 @@
                 (curG - JJMgr.instance.dataConfig.front_box_gate) >= 0;
             if (!this.hadShowBanner && curG >= JJMgr.instance.dataConfig.front_box_gate && gGap && WxApi.isValidBanner() && JJMgr.instance.dataConfig.front_box_page) {
                 this.hadShowBanner = true;
-                Laya.timer.once(1000, this, () => {
+                Laya.timer.once(500, this, () => {
                     AdMgr.instance.showBanner();
                 });
             }
@@ -3009,7 +3053,7 @@
             if (!this.hadShowBanner && curG >= JJMgr.instance.dataConfig.front_box_gate && gGap && WxApi.isValidBanner() &&
                 this.canShowBox && JJMgr.instance.dataConfig.front_box_page) {
                 this.hadShowBanner = true;
-                Laya.timer.once(1000, this, () => {
+                Laya.timer.once(500, this, () => {
                     AdMgr.instance.showAppBox();
                 });
             }
@@ -3153,7 +3197,9 @@
             this.bounesNum = PlayerDataMgr.getPlayerOffline(this.exTimeMin);
             this.bounesNumTriple = this.bounesNum * 3;
             this.initData();
-            AdMgr.instance.showBanner();
+            Laya.timer.once(200, this, () => {
+                AdMgr.instance.showBanner();
+            });
         }
         onClosed() {
             AdMgr.instance.hideBanner();
@@ -3223,13 +3269,19 @@
             this.bounesNum = 0;
         }
         onOpened() {
+            AdMgr.instance.hideBanner();
+            AdMgr.instance.showBanner();
             this.openBtn.on(Laya.Event.CLICK, this, this.openBtnCB);
-            this.closeOpenNodeBtn.on(Laya.Event.CLICK, this, this.close);
-            this.closeTxBtn.on(Laya.Event.CLICK, this, this.close);
+            this.closeOpenNodeBtn.on(Laya.Event.CLICK, this, this.closeCB);
+            this.closeTxBtn.on(Laya.Event.CLICK, this, this.closeCB);
             this.tixianBtn.on(Laya.Event.CLICK, this, this.txBtnCB);
             this.getCoinBtn.on(Laya.Event.CLICK, this, this.getCoinBtnCB);
         }
         onClosed() {
+            AdMgr.instance.hideBanner();
+            if (GameLogic.Share.gameStarted) {
+                AdMgr.instance.showBanner();
+            }
         }
         visibleOpenNode(vivible) {
             this.openNode.visible = vivible;
@@ -3243,39 +3295,48 @@
                 this.visibleTXNode(true);
                 let packetData = PlayerDataMgr.getPacketData();
                 let videoCount = packetData.videoCount;
-                if (videoCount < 3 && packetData.curCash < 1.8) {
-                    this.isGetCash = true;
+                console.log('packetData.curCash:', packetData.curCash);
+                if (parseFloat(packetData.curCash.toFixed(2)) >= 1.8) {
+                    this.isGetCash = false;
                 }
                 else {
-                    let cashPer = JJMgr.instance.dataConfig.front_luckymoney_probability;
-                    let randNum = Math.random() * 100;
-                    this.isGetCash = randNum < cashPer;
+                    if (videoCount < 3) {
+                        this.isGetCash = true;
+                    }
+                    else {
+                        let cashPer = JJMgr.instance.dataConfig.front_luckymoney_probability;
+                        let randNum = Math.random() * 100;
+                        this.isGetCash = randNum < cashPer;
+                    }
                 }
                 if (this.isGetCash) {
                     let b = 0;
                     if (videoCount == 0) {
                         b = Math.random() * 0.1 + 0.4;
-                        b.toFixed(2);
+                        b = parseFloat(b.toFixed(2));
                     }
                     else if (videoCount == 1) {
                         b = Math.random() * 0.19 + 0.2;
-                        b.toFixed(2);
+                        b = parseFloat(b.toFixed(2));
                     }
                     else if (videoCount == 2) {
                         b = Math.random() * 0.19 + 0.2;
-                        b.toFixed(2);
+                        b = parseFloat(b.toFixed(2));
                     }
                     else if (videoCount >= 3) {
                         if (packetData.curCash >= 1.78) {
                             b = 2 - packetData.curCash;
-                            b.toFixed(2);
+                            b = parseFloat(b.toFixed(2));
                         }
                         else {
                             b = Math.random() * 0.05 + 0.1;
-                            b.toFixed(2);
+                            b = parseFloat(b.toFixed(2));
                         }
                     }
                     this.bounesNum = b;
+                    if (this.bounesNum + PlayerDataMgr.getPacketData().curCash > 1.8) {
+                        this.bounesNum = parseFloat((1.8 - PlayerDataMgr.getPacketData().curCash).toFixed(2));
+                    }
                     this.gotCash();
                 }
                 else {
@@ -3286,15 +3347,22 @@
             AdMgr.instance.showVideo(cb);
         }
         gotCash() {
+            Laya.timer.once(500, this, () => {
+                SoundMgr.instance.playSoundEffect('money.mp3');
+            });
             this.cashNode.visible = true;
             this.coinNode.visible = false;
             PlayerDataMgr.getPacketData().videoCount++;
-            PlayerDataMgr.getPacketData().curCash += this.bounesNum;
+            PlayerDataMgr.getPacketData().curCash += parseFloat(this.bounesNum.toFixed(2));
             PlayerDataMgr.setPacketData();
             this.cashNum.text = PlayerDataMgr.getPacketData().curCash.toFixed(2) + '元';
             this.getCashNum.text = this.bounesNum.toFixed(2) + '元';
         }
         gotCoin() {
+            Laya.timer.once(500, this, () => {
+                SoundMgr.instance.playSoundEffect('getCoin.mp3');
+            });
+            PlayerDataMgr.changeCoin(this.bounesNum);
             this.cashNode.visible = false;
             this.coinNode.visible = true;
             this.coinNum.text = this.bounesNum.toString() + '金币';
@@ -3304,7 +3372,13 @@
             Laya.Scene.open('MyScenes/TakeCashUI.scene', false);
         }
         getCoinBtnCB() {
+            WxApi.OpenAlert('恭喜获得金币');
+            this.closeCB();
+        }
+        closeCB() {
             this.close();
+            WxApi.closePacketUICB && WxApi.closePacketUICB();
+            WxApi.closePacketUICB = null;
         }
     }
 
@@ -3552,6 +3626,8 @@
             this.clickItem(0);
         }
         onDisable() {
+            WxApi.closePacketUICB && WxApi.closePacketUICB();
+            WxApi.closePacketUICB = null;
         }
         clickItem(id) {
             for (let i = 0; i < this.cashNode.numChildren; i++) {
@@ -3625,6 +3701,7 @@
             Laya.stage.alignV = GameConfig.alignV;
             Laya.stage.alignH = GameConfig.alignH;
             Laya.URL.exportSceneToJson = GameConfig.exportSceneToJson;
+            Laya.stage.useRetinalCanvas = true;
             if (GameConfig.debug || Laya.Utils.getQueryString("debug") == "true")
                 Laya.enableDebugPanel();
             if (GameConfig.physicsDebug && Laya["PhysicsDebugDraw"])

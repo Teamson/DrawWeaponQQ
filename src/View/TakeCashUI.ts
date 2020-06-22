@@ -29,7 +29,8 @@ export default class TakeCashUI extends Laya.Scene {
     }
 
     onDisable() {
-
+        WxApi.closePacketUICB && WxApi.closePacketUICB()
+        WxApi.closePacketUICB = null
     }
 
     clickItem(id: number) {

@@ -13,8 +13,8 @@ export default class AdMgr {
         return this._instance
     }
 
-    private bannerUnitId: string[] = 
-    [/* '66e1008c167595adbc5450df9686edb8', 'cda95c4ef7ef0a6bfe3390e79c3f3069', */'947d377267bea06eb446afe81328d792', '8a7c0bf18bb869abc182b7110fd70145']
+    private bannerUnitId: string[] =
+        ['66e1008c167595adbc5450df9686edb8', 'cda95c4ef7ef0a6bfe3390e79c3f3069', '947d377267bea06eb446afe81328d792', '8a7c0bf18bb869abc182b7110fd70145']
     private videoUnitId: string = '32351da471a086273478425fb7f99aab'
     private appBoxUnitId: string = 'e72c06906c7b12b06cfe70145816b8ed'
     private bannerAd: any = null
@@ -84,19 +84,11 @@ export default class AdMgr {
     }
 
     //初始化banner
-    initBanner() {
-        //适配iphoneX
-        let isIphonex = false
-        if (Laya.Browser.onWeiXin) {
-            Laya.Browser.window.qq.getSystemInfo({
-                success: res => {
-                    let modelmes = res.model
-                    if (modelmes.search('iPhone X') != -1) {
-                        isIphonex = true
-                    }
-                }
-            })
+    initBanner(isShow?: boolean) {
+        if (this.bannerAd != null) {
+            this.destroyBanner()
         }
+        this.isBannerError = false
 
         let winSize = Laya.Browser.window.qq.getSystemInfoSync()
 
@@ -105,18 +97,13 @@ export default class AdMgr {
             adUnitId: this.bannerUnitId[this.curBannerId],
             style: {
                 left: 0,
-                top: 0,
-                width: 750,
-                height: 0
+                top: winSize.windowHeight - 100,
+                width: winSize.windowWidth
             }
         })
         //监听banner尺寸修正
         this.bannerAd.onResize(res => {
-            if (isIphonex) {
-                this.bannerAd.style.top = winSize.windowHeight - res.height - 10
-            } else {
-                this.bannerAd.style.top = winSize.windowHeight - res.height
-            }
+            this.bannerAd.style.top = winSize.windowHeight - res.height
             this.bannerAd.style.left = winSize.windowWidth / 2 - res.width / 2
         })
 
@@ -125,6 +112,9 @@ export default class AdMgr {
             console.log('banner error:', JSON.stringify(res))
             this.isBannerError = true
         })
+
+        if (isShow)
+            this.bannerAd.show()
     }
     //隐藏banner
     hideBanner(isCount: boolean = true) {
@@ -139,37 +129,22 @@ export default class AdMgr {
                 }
 
                 console.log('destroy banner')
-                this.bannerAd.destroy()
-                this.bannerAd = null
+                this.destroyBanner()
                 this.initBanner()
             }
         }
     }
 
-    // countBanner() {
-    //     if (JJMgr.instance.dataConfig != null && this.showBannerCount > parseInt(JJMgr.instance.dataConfig.front_banner_number)) {
-    //         this.bannerAd.hide()
-    //         this.showBannerCount = 0
-    //         this.curBannerId++
-    //         if (this.curBannerId >= this.bannerUnitId.length) {
-    //             this.curBannerId = 0
-    //         }
-
-    //         console.log('destroy banner')
-    //         this.bannerAd.destroy()
-    //         this.bannerAd = null
-    //         this.initBanner()
-    //         this.showBanner()
-    //     }
-    // }
-
     //显示banner
     showBanner() {
-        if (Laya.Browser.onWeiXin) {
+        if (Laya.Browser.onWeiXin && this.bannerAd) {
             this.showBannerCount++
             this.bannerAd.show()
             console.log('showBanner :', this.showBannerCount)
         }
+        // else if (Laya.Browser.onWeiXin && this.isBannerError) {
+        //     this.showBannerCount++
+        // }
     }
     //销毁banner
     destroyBanner() {
@@ -212,8 +187,6 @@ export default class AdMgr {
     //初始化激励视频
     showVideo(cb: Function) {
         this.videoCallback = cb
-        this.videoCallback()
-        return
         if (!Laya.Browser.onWeiXin) {
             this.videoCallback()
             return

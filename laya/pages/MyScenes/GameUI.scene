@@ -2,11 +2,11 @@
     "x":0,
     "type":"Scene",
     "selectedBox":2,
-    "selecteID":14,
+    "selecteID":124,
     "searchKey":"Scene",
     "props":{"width":750,"sceneColor":"#36eeff","runtime":"View/GameUI.ts","height":2000},
     "nodeParent":-1,
-    "maxID":153,
+    "maxID":156,
     "label":"Scene",
     "isOpen":true,
     "isDirectory":true,
@@ -35,13 +35,14 @@
             "props":{"y":1050,"x":375,"var":"touchPanel","skin":"mainUI/sy-kz.png","anchorY":0.5,"anchorX":0.5},
             "nodeParent":2,
             "label":"touchPanel",
-            "isOpen":false,
+            "isOpen":true,
             "isDirectory":true,
             "isAniNode":true,
             "hasChild":true,
             "compId":15,
             "child":[
                 {
+                    "x":30,
                     "type":"Image",
                     "searchKey":"Image",
                     "props":{"y":0,"x":230,"skin":"mainUI/sy_zt.png","anchorY":0.5,"anchorX":0.5},
@@ -55,6 +56,7 @@
                         ]
                 },
                 {
+                    "x":30,
                     "type":"Image",
                     "searchKey":"Image,drawTips",
                     "props":{"y":177,"x":230,"var":"drawTips","skin":"mainUI/sy_ck2.png","scaleY":1,"scaleX":1,"anchorY":0.5,"anchorX":0.5},
@@ -65,9 +67,11 @@
                     "hasChild":false,
                     "compId":124,
                     "child":[
-                        ]
+                        ],
+                    "$HIDDEN":false
                 },
                 {
+                    "x":30,
                     "type":"Animation",
                     "searchKey":"Animation,fingerAni",
                     "props":{"y":155,"x":230,"var":"fingerAni","source":"MyScenes/FingerAni.ani","autoPlay":true},
@@ -139,7 +143,6 @@
             "compId":16,
             "child":[
                 {
-                    "x":30,
                     "type":"Sprite",
                     "searchKey":"Sprite,coinNode",
                     "props":{"y":59,"x":40,"name":"coinNode"},
@@ -192,7 +195,6 @@
                         }]
                 },
                 {
-                    "x":30,
                     "type":"Sprite",
                     "searchKey":"Sprite,powerNode",
                     "props":{"y":59,"x":265,"name":"powerNode"},
@@ -258,7 +260,6 @@
                         }]
                 },
                 {
-                    "x":30,
                     "type":"Sprite",
                     "searchKey":"Sprite,gradeNode",
                     "props":{"y":-20,"x":0,"name":"gradeNode"},
@@ -481,7 +482,6 @@
                         }]
                 },
                 {
-                    "x":30,
                     "type":"Script",
                     "switchAble":true,
                     "source":"src/View/GameTopNode.ts",
@@ -498,7 +498,6 @@
                         ]
                 },
                 {
-                    "x":30,
                     "type":"Sprite",
                     "searchKey":"Sprite,txNode",
                     "props":{"y":277,"x":631,"visible":true,"name":"txNode"},
@@ -511,7 +510,6 @@
                     "compId":146,
                     "child":[
                         {
-                            "x":45,
                             "type":"Image",
                             "searchKey":"Image",
                             "props":{"y":0,"x":0,"skin":"packetsUI/hb-hb3.png","anchorY":0.5,"anchorX":0.5},
@@ -525,7 +523,6 @@
                                 ]
                         },
                         {
-                            "x":45,
                             "type":"Image",
                             "searchKey":"Image",
                             "props":{"y":0,"x":-88,"skin":"packetsUI/hb-hb2.png","anchorY":0.5,"anchorX":0.5},
@@ -539,10 +536,9 @@
                                 ]
                         },
                         {
-                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,txBtn",
-                            "props":{"y":0,"x":72,"var":"txBtn","skin":"packetsUI/hb-hb4.png","anchorY":0.5,"anchorX":0.5},
+                            "props":{"y":0,"x":72,"skin":"packetsUI/hb-hb4.png","name":"txBtn","anchorY":0.5,"anchorX":0.5},
                             "nodeParent":146,
                             "label":"txBtn",
                             "isDirectory":false,
@@ -553,10 +549,9 @@
                                 ]
                         },
                         {
-                            "x":45,
                             "type":"Label",
                             "searchKey":"Label,curNum",
-                            "props":{"y":0,"x":0,"var":"curNum","text":"6.66元","fontSize":23,"font":"Arial","color":"#ffffff","anchorY":0.5,"anchorX":0.5},
+                            "props":{"y":0,"x":0,"text":"0.00元","name":"curNum","fontSize":23,"font":"Arial","color":"#ffffff","anchorY":0.5,"anchorX":0.5},
                             "nodeParent":146,
                             "label":"curNum",
                             "isDirectory":false,
@@ -582,7 +577,6 @@
             "compId":14,
             "child":[
                 {
-                    "x":30,
                     "type":"Sprite",
                     "searchKey":"Sprite,noPowerNode",
                     "props":{"y":0,"x":375,"visible":false,"var":"noPowerNode"},
@@ -692,7 +686,6 @@
                     "$HIDDEN":true
                 },
                 {
-                    "x":30,
                     "type":"Sprite",
                     "searchKey":"Sprite,btnNode",
                     "props":{"x":375,"var":"btnNode"},
@@ -705,7 +698,6 @@
                     "compId":50,
                     "child":[
                         {
-                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,upgradeBtn",
                             "props":{"y":-85,"x":375,"var":"upgradeBtn","skin":"mainUI/sy-sj.png","scaleY":1,"scaleX":1,"anchorY":0.5,"anchorX":1},
@@ -733,7 +725,6 @@
                             "$HIDDEN":false
                         },
                         {
-                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,skinBtn",
                             "props":{"y":85,"x":375,"var":"skinBtn","skin":"mainUI/sy-pf.png","anchorY":0.5,"anchorX":1},
@@ -747,7 +738,6 @@
                                 ]
                         },
                         {
-                            "x":45,
                             "type":"Sprite",
                             "searchKey":"Sprite,overNode",
                             "props":{"y":0,"x":0,"visible":false,"var":"overNode"},
@@ -828,7 +818,6 @@
                             "$HIDDEN":true
                         },
                         {
-                            "x":45,
                             "type":"Image",
                             "searchKey":"Image,getBounesBtn",
                             "props":{"y":-240,"x":-310,"visible":true,"var":"getBounesBtn","skin":"packetsUI/hb-hb.png","anchorY":0.5,"anchorX":0.5},
@@ -841,7 +830,6 @@
                             "compId":151,
                             "child":[
                                 {
-                                    "x":60,
                                     "type":"Image",
                                     "searchKey":"Image",
                                     "props":{"y":12,"x":85,"skin":"packetsUI/hb-dian.png","anchorY":0.5,"anchorX":0.5},
@@ -858,7 +846,6 @@
                     "$HIDDEN":false
                 },
                 {
-                    "x":30,
                     "type":"Sprite",
                     "searchKey":"Sprite,upgradeNode",
                     "props":{"y":-20,"x":750,"visible":false,"var":"upgradeNode"},
