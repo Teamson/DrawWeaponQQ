@@ -10,7 +10,7 @@ export default class WxApi {
     public static isPacketWhiteList: boolean = false
 
     public static openId: string = ''
-    public static version: string = '1.0.4'
+    public static version: string = '1.0.5'
     public static isVibrate: boolean = true
     public static isMusic: boolean = true
     public static OnShowFun: Function = null
@@ -250,16 +250,25 @@ export default class WxApi {
             cb && cb()
         }
     }
-    public static isValidBanner() {
+    public static isValidBanner(grade?: number) {
         if (WxApi.isWhiteList) {
-            return PlayerDataMgr.getPlayerData().grade >= JJMgr.instance.dataConfig.front_pass_gate && JJMgr.instance.dataConfig.is_allow_area == 1
+            if (grade) {
+                return grade >= JJMgr.instance.dataConfig.front_pass_gate && JJMgr.instance.dataConfig.is_allow_area == 1
+            } else {
+                return PlayerDataMgr.getPlayerData().grade >= JJMgr.instance.dataConfig.front_pass_gate && JJMgr.instance.dataConfig.is_allow_area == 1
+            }
         } else
             return false
     }
 
-    public static isValidPacket() {
-        return WxApi.isPacketWhiteList && PlayerDataMgr.getPlayerData().grade >= JJMgr.instance.dataConfig.front_redmoney_gate &&
-            JJMgr.instance.dataConfig.front_redmoney_page
+    public static isValidPacket(isFinish: boolean = false) {
+        if (isFinish) {
+            return WxApi.isPacketWhiteList && PlayerDataMgr.getPlayerData().grade - 1 >= JJMgr.instance.dataConfig.front_redmoney_gate &&
+                JJMgr.instance.dataConfig.front_redmoney_page
+        } else {
+            return WxApi.isPacketWhiteList && PlayerDataMgr.getPlayerData().grade >= JJMgr.instance.dataConfig.front_redmoney_gate &&
+                JJMgr.instance.dataConfig.front_redmoney_page
+        }
     }
 
     //计算分享次数

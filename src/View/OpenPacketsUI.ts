@@ -40,7 +40,7 @@ export default class OpenPacketsUI extends Laya.Scene {
 
     onClosed() {
         AdMgr.instance.hideBanner()
-        if (GameLogic.Share.gameStarted) {
+        if (GameLogic.Share.gameStarted && !GameLogic.Share.isFinishGame) {
             AdMgr.instance.showBanner()
         }
     }

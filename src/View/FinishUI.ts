@@ -24,7 +24,7 @@ export default class FinishUI extends Laya.Scene {
         WxApi.aldEvent('第' + PlayerDataMgr.getPlayerData().grade + '关：通关')
         this.initData()
 
-        AdMgr.instance.hideBanner(false)
+        AdMgr.instance.hideBanner()
     }
 
     onClosed() {

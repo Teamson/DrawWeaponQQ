@@ -91,7 +91,7 @@ export default class GameUI extends Laya.Scene {
         SoundMgr.instance.playMusic('bgm.mp3')
 
         if (!GameLogic.Share.isBanGameUIBanner) {
-            AdMgr.instance.hideBanner(false)
+            AdMgr.instance.hideBanner()
         } else {
             GameLogic.Share.isBanGameUIBanner = false
         }
@@ -374,7 +374,7 @@ export default class GameUI extends Laya.Scene {
         if (visible)
             AdMgr.instance.hideBanner()
         else {
-            AdMgr.instance.hideBanner()
+            //AdMgr.instance.hideBanner()
             AdMgr.instance.showBanner()
             // if (GameLogic.Share.showBottomBanner) {
             //     AdMgr.instance.showBanner()

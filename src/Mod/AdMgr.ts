@@ -14,7 +14,8 @@ export default class AdMgr {
     }
 
     private bannerUnitId: string[] =
-        ['66e1008c167595adbc5450df9686edb8', 'cda95c4ef7ef0a6bfe3390e79c3f3069', '947d377267bea06eb446afe81328d792', '8a7c0bf18bb869abc182b7110fd70145']
+        ['66e1008c167595adbc5450df9686edb8', 'cda95c4ef7ef0a6bfe3390e79c3f3069', '947d377267bea06eb446afe81328d792', '8a7c0bf18bb869abc182b7110fd70145',
+            '0570d3493da45e35547e61e32ee19b38', '176025b6749a637515faaf04b0272d52', '98be607366cb4d45b017c141d3667bce']
     private videoUnitId: string = '32351da471a086273478425fb7f99aab'
     private appBoxUnitId: string = 'e72c06906c7b12b06cfe70145816b8ed'
     private bannerAd: any = null
@@ -24,6 +25,7 @@ export default class AdMgr {
     private curBannerId: number = 0
     public showBannerCount: number = 0
     public isBannerError: boolean = false
+    private isLoaded: boolean = false
 
     private appBox: any = null
 
@@ -85,20 +87,16 @@ export default class AdMgr {
 
     //初始化banner
     initBanner(isShow?: boolean) {
-        if (this.bannerAd != null) {
-            this.destroyBanner()
-        }
-        this.isBannerError = false
-
+        this.isLoaded = true
         let winSize = Laya.Browser.window.qq.getSystemInfoSync()
-
         //初始化banner
         this.bannerAd = Laya.Browser.window.qq.createBannerAd({
             adUnitId: this.bannerUnitId[this.curBannerId],
             style: {
                 left: 0,
-                top: winSize.windowHeight - 100,
-                width: winSize.windowWidth
+                top: winSize.windowHeight,
+                width: 750,
+                height: 200
             }
         })
         //监听banner尺寸修正
@@ -106,19 +104,20 @@ export default class AdMgr {
             this.bannerAd.style.top = winSize.windowHeight - res.height
             this.bannerAd.style.left = winSize.windowWidth / 2 - res.width / 2
         })
-
         this.bannerAd.onError(res => {
             // 错误事件
             console.log('banner error:', JSON.stringify(res))
-            this.isBannerError = true
         })
-
-        if (isShow)
-            this.bannerAd.show()
+        this.bannerAd.onLoad(() => {
+            this.isLoaded = true
+            if (isShow)
+                this.showBanner()
+        })
     }
     //隐藏banner
-    hideBanner(isCount: boolean = true) {
-        if (Laya.Browser.onWeiXin) {
+    hideBanner() {
+        let i = this.curBannerId
+        if (Laya.Browser.onWeiXin && this.bannerAd) {
             this.bannerAd.hide()
 
             if (JJMgr.instance.dataConfig != null && this.showBannerCount >= parseInt(JJMgr.instance.dataConfig.front_banner_number)) {
@@ -130,25 +129,29 @@ export default class AdMgr {
 
                 console.log('destroy banner')
                 this.destroyBanner()
-                this.initBanner()
             }
         }
     }
 
     //显示banner
     showBanner() {
-        if (Laya.Browser.onWeiXin && this.bannerAd) {
-            this.showBannerCount++
-            this.bannerAd.show()
+        let i = this.curBannerId
+        if (Laya.Browser.onWeiXin) {
+            if (this.bannerAd && this.isLoaded) {
+                this.showBannerCount++
+                this.bannerAd.show()
+            } else {
+                this.initBanner(true)
+            }
             console.log('showBanner :', this.showBannerCount)
         }
-        // else if (Laya.Browser.onWeiXin && this.isBannerError) {
-        //     this.showBannerCount++
-        // }
     }
     //销毁banner
     destroyBanner() {
-        if (Laya.Browser.onWeiXin && this.bannerAd) {
+        if (Laya.Browser.onWeiXin) {
+            this.bannerAd.offResize()
+            this.bannerAd.offLoad()
+            this.bannerAd.offError()
             this.bannerAd.destroy()
             this.bannerAd = null
         }

@@ -63,13 +63,13 @@ export default class KillBossUI extends Laya.Scene {
 
         AdMgr.instance.hideBanner()
 
-        Laya.timer.once(5000, this, () => {
-            this.close()
-        })
-        Laya.timer.once(4000, this, () => {
-            this.canShowBox = false
-            AdMgr.instance.closeAppBox()
-        })
+        // Laya.timer.once(5000, this, () => {
+        //     this.close()
+        // })
+        // Laya.timer.once(4000, this, () => {
+        //     this.canShowBox = false
+        //     AdMgr.instance.closeAppBox()
+        // })
     }
 
     onClosed() {
@@ -99,7 +99,7 @@ export default class KillBossUI extends Laya.Scene {
         let gGap = (curG - JJMgr.instance.dataConfig.front_box_gate) % (JJMgr.instance.dataConfig.front_box_everygate) == 0 &&
             (curG - JJMgr.instance.dataConfig.front_box_gate) >= 0
 
-        if (!this.hadShowBanner && curG >= JJMgr.instance.dataConfig.front_box_gate && gGap && WxApi.isValidBanner() && JJMgr.instance.dataConfig.front_box_page) {
+        if (!this.hadShowBanner && curG >= JJMgr.instance.dataConfig.front_box_gate && gGap && WxApi.isValidBanner(curG) && JJMgr.instance.dataConfig.front_box_page) {
             this.hadShowBanner = true
             Laya.timer.once(500, this, () => {
                 AdMgr.instance.showBanner()
@@ -135,7 +135,7 @@ export default class KillBossUI extends Laya.Scene {
         let gGap = (curG - JJMgr.instance.dataConfig.front_box_gate) % (JJMgr.instance.dataConfig.front_box_everygate) == 0 &&
             (curG - JJMgr.instance.dataConfig.front_box_gate) >= 0
 
-        if (!this.hadShowBanner && curG >= JJMgr.instance.dataConfig.front_box_gate && gGap && WxApi.isValidBanner() &&
+        if (!this.hadShowBanner && curG >= JJMgr.instance.dataConfig.front_box_gate && gGap && WxApi.isValidBanner(curG) &&
             this.canShowBox && JJMgr.instance.dataConfig.front_box_page) {
             this.hadShowBanner = true
             Laya.timer.once(500, this, () => {

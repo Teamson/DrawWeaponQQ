@@ -396,6 +396,7 @@ export default class GameLogic {
         Laya.timer.frameLoop(1, this, this.checkIsOver)
     }
 
+    isFinishGame: boolean = false
     checkIsOver() {
         if (this._aiNode.numChildren <= 0) {
             if (this._playerNode.numChildren <= PlayerDataMgr.getPlayerCount()) {
@@ -405,6 +406,7 @@ export default class GameLogic {
             Laya.timer.clear(this, this.checkIsOver)
             if (this.gradeIndex >= 4) {
                 //关卡胜利
+                this.isFinishGame = true
                 this.tempPlayerCount = 0
                 WxApi.tempGrade = PlayerDataMgr.getPlayerData().grade
                 PlayerDataMgr.getPlayerData().grade += 1
@@ -413,17 +415,20 @@ export default class GameLogic {
                 Laya.Scene.close('MyScenes/GameUI.scene')
                 if (JJMgr.instance.dataConfig.front_box_page && WxApi.isValidBanner()) {
                     Laya.Scene.open('MyScenes/KillBossUI.scene', true, () => {
-                        WxApi.closePacketUICB = () => {
+                        if (WxApi.isValidPacket(true)) {
+                            WxApi.closePacketUICB = () => {
+                                this._playerNode.active = true
+                                Laya.Scene.open('MyScenes/FinishUI.scene', false)
+                            }
+                            Laya.Scene.open('MyScenes/OpenPacketsUI.scene', false)
+                        } else {
                             this._playerNode.active = true
                             Laya.Scene.open('MyScenes/FinishUI.scene', false)
                         }
-                        Laya.Scene.open('MyScenes/OpenPacketsUI.scene', false)
-                        // this._playerNode.active = true
-                        // Laya.Scene.open('MyScenes/FinishUI.scene', false)
                     })
                     this._playerNode.active = false
                 } else {
-                    if (WxApi.isValidPacket()) {
+                    if (WxApi.isValidPacket(true)) {
                         WxApi.closePacketUICB = () => {
                             Laya.Scene.open('MyScenes/FinishUI.scene', false)
                         }
@@ -459,6 +464,7 @@ export default class GameLogic {
         }
         //失败
         if (this._playerNode.numChildren <= 0 && !this.isOver) {
+            this.isFinishGame = true
             this.isOver = true
             this.tempPlayerCount = 0
             //GameUI.Share.visibleGameOverNode(true)
@@ -477,8 +483,12 @@ export default class GameLogic {
 
             if (JJMgr.instance.dataConfig.front_box_page && WxApi.isValidBanner()) {
                 Laya.Scene.open('MyScenes/KillBossUI.scene', false, () => {
-                    WxApi.closePacketUICB = cb
-                    Laya.Scene.open('MyScenes/OpenPacketsUI.scene', false)
+                    if (WxApi.isValidPacket()) {
+                        WxApi.closePacketUICB = cb
+                        Laya.Scene.open('MyScenes/OpenPacketsUI.scene', false)
+                    } else {
+                        cb()
+                    }
                 })
             } else {
                 if (WxApi.isValidPacket()) {
@@ -514,7 +524,7 @@ export default class GameLogic {
             AdMgr.instance.hideBanner()
             GameUI.Share.reviveBtnCB()
         } else {
-            //AdMgr.instance.hideBanner()
+            AdMgr.instance.hideBanner()
             this.showBottomBanner = true
             this.readyGo()
         }
@@ -556,6 +566,7 @@ export default class GameLogic {
     }
 
     restartGame() {
+        this.isFinishGame = false
         this.isOver = false
         GameLogic.Share.gotKillBossBounes = false
         this.gameStarted = false
