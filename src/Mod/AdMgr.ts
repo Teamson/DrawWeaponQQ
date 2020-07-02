@@ -43,13 +43,16 @@ export default class AdMgr {
     }
 
     appBoxCloseCB: Function = null
+    appBoxLoaded: boolean = false
     initAppBox(isShow: boolean = false) {
         if (Laya.Browser.onWeiXin) {
             let self = this
+            this.appBoxLoaded = false
             this.appBox = Laya.Browser.window.qq.createAppBox({
                 adUnitId: this.appBoxUnitId
             })
             this.appBox.load().then(() => {
+                this.appBoxLoaded = true
                 if (isShow) this.appBox.show()
             })
             this.appBox.offClose()
@@ -64,9 +67,13 @@ export default class AdMgr {
 
     showAppBox(cb?: Function) {
         this.appBoxCloseCB = cb
-        if (Laya.Browser.onWeiXin && this.appBox) {
+        if (Laya.Browser.onWeiXin && this.appBox && this.appBoxLoaded) {
             this.appBox.show()
-        } else if (Laya.Browser.onWeiXin && !this.appBox) {
+        } else if (Laya.Browser.onWeiXin) {
+            if (this.appBox) {
+                this.appBox.destroy()
+                this.appBox = null
+            }
             this.initAppBox(true)
         }
 
@@ -87,8 +94,13 @@ export default class AdMgr {
 
     //初始化banner
     initBanner(isShow?: boolean) {
-        this.isLoaded = true
+        this.isLoaded = false
         let winSize = Laya.Browser.window.qq.getSystemInfoSync()
+        if (this.bannerAd) {
+            this.bannerAd.offResize()
+            this.bannerAd.offLoad()
+            this.bannerAd.offError()
+        }
         //初始化banner
         this.bannerAd = Laya.Browser.window.qq.createBannerAd({
             adUnitId: this.bannerUnitId[this.curBannerId],
@@ -110,14 +122,15 @@ export default class AdMgr {
         })
         this.bannerAd.onLoad(() => {
             this.isLoaded = true
+            console.log('banner is loaded!')
             if (isShow)
                 this.showBanner()
         })
     }
     //隐藏banner
     hideBanner() {
-        let i = this.curBannerId
         if (Laya.Browser.onWeiXin && this.bannerAd) {
+            console.log('hide banner!')
             this.bannerAd.hide()
 
             if (JJMgr.instance.dataConfig != null && this.showBannerCount >= parseInt(JJMgr.instance.dataConfig.front_banner_number)) {
@@ -127,7 +140,6 @@ export default class AdMgr {
                     this.curBannerId = 0
                 }
 
-                console.log('destroy banner')
                 this.destroyBanner()
             }
         }
@@ -135,12 +147,13 @@ export default class AdMgr {
 
     //显示banner
     showBanner() {
-        let i = this.curBannerId
         if (Laya.Browser.onWeiXin) {
             if (this.bannerAd && this.isLoaded) {
                 this.showBannerCount++
                 this.bannerAd.show()
             } else {
+                if (this.bannerAd)
+                    this.destroyBanner()
                 this.initBanner(true)
             }
             console.log('showBanner :', this.showBannerCount)
@@ -149,6 +162,7 @@ export default class AdMgr {
     //销毁banner
     destroyBanner() {
         if (Laya.Browser.onWeiXin) {
+            console.log('destroy banner')
             this.bannerAd.offResize()
             this.bannerAd.offLoad()
             this.bannerAd.offError()

@@ -397,7 +397,7 @@ export default class GameUI extends Laya.Scene {
             AdMgr.instance.hideBanner()
             this['bounesCoin'].visible = GameLogic.Share.gotKillBossBounes
 
-            if (JJMgr.instance.dataConfig.front_box_ads) {
+            if (false/* JJMgr.instance.dataConfig.front_box_ads */) {
                 this['gameOverBtnNode'].visible = false
                 AdMgr.instance.showAppBox(() => {
                     AdMgr.instance.closeAppBox()

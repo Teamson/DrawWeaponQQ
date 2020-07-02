@@ -21,10 +21,10 @@ export default class FinishUI extends Laya.Scene {
 
     onOpened(param?: any) {
 
+        AdMgr.instance.hideBanner()
         WxApi.aldEvent('第' + PlayerDataMgr.getPlayerData().grade + '关：通关')
         this.initData()
 
-        AdMgr.instance.hideBanner()
     }
 
     onClosed() {
@@ -46,7 +46,7 @@ export default class FinishUI extends Laya.Scene {
         this.videoBtn.visible = g != 4
         this.noBtn.visible = g != 4
 
-        if (JJMgr.instance.dataConfig.front_box_ads) {
+        if (false/* JJMgr.instance.dataConfig.front_box_ads */) {
             this['btnNode'].visible = false
             AdMgr.instance.showAppBox(() => {
                 this.closeAppCB()

@@ -35,9 +35,7 @@ export default class OfflineUI extends Laya.Scene {
         this.bounesNumTriple = this.bounesNum * 3
 
         this.initData()
-        Laya.timer.once(200, this, () => {
-            AdMgr.instance.showBanner()
-        })
+        AdMgr.instance.showBanner()
     }
 
     onClosed() {

@@ -761,6 +761,7 @@
             this.videoLoaded = false;
             this.isCreateBAD = false;
             this.appBoxCloseCB = null;
+            this.appBoxLoaded = false;
         }
         static get instance() {
             if (!this._instance) {
@@ -778,10 +779,12 @@
         initAppBox(isShow = false) {
             if (Laya.Browser.onWeiXin) {
                 let self = this;
+                this.appBoxLoaded = false;
                 this.appBox = Laya.Browser.window.qq.createAppBox({
                     adUnitId: this.appBoxUnitId
                 });
                 this.appBox.load().then(() => {
+                    this.appBoxLoaded = true;
                     if (isShow)
                         this.appBox.show();
                 });
@@ -796,10 +799,14 @@
         }
         showAppBox(cb) {
             this.appBoxCloseCB = cb;
-            if (Laya.Browser.onWeiXin && this.appBox) {
+            if (Laya.Browser.onWeiXin && this.appBox && this.appBoxLoaded) {
                 this.appBox.show();
             }
-            else if (Laya.Browser.onWeiXin && !this.appBox) {
+            else if (Laya.Browser.onWeiXin) {
+                if (this.appBox) {
+                    this.appBox.destroy();
+                    this.appBox = null;
+                }
                 this.initAppBox(true);
             }
         }
@@ -811,8 +818,13 @@
             }
         }
         initBanner(isShow) {
-            this.isLoaded = true;
+            this.isLoaded = false;
             let winSize = Laya.Browser.window.qq.getSystemInfoSync();
+            if (this.bannerAd) {
+                this.bannerAd.offResize();
+                this.bannerAd.offLoad();
+                this.bannerAd.offError();
+            }
             this.bannerAd = Laya.Browser.window.qq.createBannerAd({
                 adUnitId: this.bannerUnitId[this.curBannerId],
                 style: {
@@ -831,13 +843,14 @@
             });
             this.bannerAd.onLoad(() => {
                 this.isLoaded = true;
+                console.log('banner is loaded!');
                 if (isShow)
                     this.showBanner();
             });
         }
         hideBanner() {
-            let i = this.curBannerId;
             if (Laya.Browser.onWeiXin && this.bannerAd) {
+                console.log('hide banner!');
                 this.bannerAd.hide();
                 if (JJMgr.instance.dataConfig != null && this.showBannerCount >= parseInt(JJMgr.instance.dataConfig.front_banner_number)) {
                     this.showBannerCount = 0;
@@ -845,19 +858,19 @@
                     if (this.curBannerId >= this.bannerUnitId.length) {
                         this.curBannerId = 0;
                     }
-                    console.log('destroy banner');
                     this.destroyBanner();
                 }
             }
         }
         showBanner() {
-            let i = this.curBannerId;
             if (Laya.Browser.onWeiXin) {
                 if (this.bannerAd && this.isLoaded) {
                     this.showBannerCount++;
                     this.bannerAd.show();
                 }
                 else {
+                    if (this.bannerAd)
+                        this.destroyBanner();
                     this.initBanner(true);
                 }
                 console.log('showBanner :', this.showBannerCount);
@@ -865,6 +878,7 @@
         }
         destroyBanner() {
             if (Laya.Browser.onWeiXin) {
+                console.log('destroy banner');
                 this.bannerAd.offResize();
                 this.bannerAd.offLoad();
                 this.bannerAd.offError();
@@ -1163,7 +1177,7 @@
     WxApi.isWhiteList = false;
     WxApi.isPacketWhiteList = false;
     WxApi.openId = '';
-    WxApi.version = '1.0.5';
+    WxApi.version = '1.0.6';
     WxApi.isVibrate = true;
     WxApi.isMusic = true;
     WxApi.OnShowFun = null;
@@ -1767,7 +1781,7 @@
             if (visible && !this.gameOverNode.visible) {
                 AdMgr.instance.hideBanner();
                 this['bounesCoin'].visible = GameLogic.Share.gotKillBossBounes;
-                if (JJMgr.instance.dataConfig.front_box_ads) {
+                if (false) {
                     this['gameOverBtnNode'].visible = false;
                     AdMgr.instance.showAppBox(() => {
                         AdMgr.instance.closeAppBox();
@@ -2466,7 +2480,7 @@
                     PlayerDataMgr.getPlayerData().gradeIndex = 0;
                     PlayerDataMgr.setPlayerData();
                     Laya.Scene.close('MyScenes/GameUI.scene');
-                    if (JJMgr.instance.dataConfig.front_box_page && WxApi.isValidBanner()) {
+                    if (WxApi.isWhiteList && JJMgr.instance.dataConfig.front_box_page && WxApi.tempGrade >= JJMgr.instance.dataConfig.front_box_gate) {
                         Laya.Scene.open('MyScenes/KillBossUI.scene', true, () => {
                             if (WxApi.isValidPacket(true)) {
                                 WxApi.closePacketUICB = () => {
@@ -2533,7 +2547,7 @@
                 GameLogic.Share._playerNode.active = false;
                 GameLogic.Share._aiNode.active = false;
                 WxApi.tempGrade = PlayerDataMgr.getPlayerData().grade;
-                if (JJMgr.instance.dataConfig.front_box_page && WxApi.isValidBanner()) {
+                if (WxApi.isWhiteList && JJMgr.instance.dataConfig.front_box_page && PlayerDataMgr.getPlayerData().grade >= JJMgr.instance.dataConfig.front_box_gate) {
                     Laya.Scene.open('MyScenes/KillBossUI.scene', false, () => {
                         if (WxApi.isValidPacket()) {
                             WxApi.closePacketUICB = cb;
@@ -2844,9 +2858,9 @@
             this.boxBtnEnabled = true;
         }
         onOpened(param) {
+            AdMgr.instance.hideBanner();
             WxApi.aldEvent('第' + PlayerDataMgr.getPlayerData().grade + '关：通关');
             this.initData();
-            AdMgr.instance.hideBanner();
         }
         onClosed() {
             AdMgr.instance.hideBanner();
@@ -2864,7 +2878,7 @@
             this.openBoxBtn.visible = g == 4;
             this.videoBtn.visible = g != 4;
             this.noBtn.visible = g != 4;
-            if (JJMgr.instance.dataConfig.front_box_ads) {
+            if (false) {
                 this['btnNode'].visible = false;
                 AdMgr.instance.showAppBox(() => {
                     this.closeAppCB();
@@ -3026,6 +3040,13 @@
                 }
             });
             AdMgr.instance.hideBanner();
+            Laya.timer.once(5000, this, () => {
+                this.close();
+            });
+            Laya.timer.once(4000, this, () => {
+                this.canShowBox = false;
+                AdMgr.instance.closeAppBox();
+            });
         }
         onClosed() {
             AdMgr.instance.closeAppBox();
@@ -3047,9 +3068,9 @@
         clickBtnCBDown() {
             GameLogic.Share.gotKillBossBounes = true;
             let curG = WxApi.tempGrade;
-            let gGap = (curG - JJMgr.instance.dataConfig.front_box_gate) % (JJMgr.instance.dataConfig.front_box_everygate) == 0 &&
-                (curG - JJMgr.instance.dataConfig.front_box_gate) >= 0;
-            if (!this.hadShowBanner && curG >= JJMgr.instance.dataConfig.front_box_gate && gGap && WxApi.isValidBanner(curG) && JJMgr.instance.dataConfig.front_box_page) {
+            let gGap = (curG - JJMgr.instance.dataConfig.front_box_gate) % JJMgr.instance.dataConfig.front_box_everygate == 0 &&
+                curG >= JJMgr.instance.dataConfig.front_box_gate;
+            if (!this.hadShowBanner && gGap && WxApi.isValidBanner(curG)) {
                 this.hadShowBanner = true;
                 Laya.timer.once(500, this, () => {
                     AdMgr.instance.showBanner();
@@ -3078,10 +3099,9 @@
         clickBossBtnCB() {
             GameLogic.Share.gotKillBossBounes = true;
             let curG = WxApi.tempGrade;
-            let gGap = (curG - JJMgr.instance.dataConfig.front_box_gate) % (JJMgr.instance.dataConfig.front_box_everygate) == 0 &&
-                (curG - JJMgr.instance.dataConfig.front_box_gate) >= 0;
-            if (!this.hadShowBanner && curG >= JJMgr.instance.dataConfig.front_box_gate && gGap && WxApi.isValidBanner(curG) &&
-                this.canShowBox && JJMgr.instance.dataConfig.front_box_page) {
+            let gGap = (curG - JJMgr.instance.dataConfig.front_box_gate) % JJMgr.instance.dataConfig.front_box_everygate == 0 &&
+                curG >= JJMgr.instance.dataConfig.front_box_gate;
+            if (!this.hadShowBanner && gGap && this.canShowBox && WxApi.isValidBanner(curG)) {
                 this.hadShowBanner = true;
                 Laya.timer.once(500, this, () => {
                     AdMgr.instance.showAppBox();
@@ -3227,9 +3247,7 @@
             this.bounesNum = PlayerDataMgr.getPlayerOffline(this.exTimeMin);
             this.bounesNumTriple = this.bounesNum * 3;
             this.initData();
-            Laya.timer.once(200, this, () => {
-                AdMgr.instance.showBanner();
-            });
+            AdMgr.instance.showBanner();
         }
         onClosed() {
             AdMgr.instance.hideBanner();
