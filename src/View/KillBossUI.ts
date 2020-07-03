@@ -55,9 +55,11 @@ export default class KillBossUI extends Laya.Scene {
         Laya.timer.frameLoop(1, this, this.decBar)
 
         WxApi.isKillBossUI = true
-        WxApi.WxOnHide(() => {
+        Laya.Browser.window.wx.onShow(() => {
+            if (this)
+                Laya.timer.clearAll(this)
             if (WxApi.isKillBossUI) {
-                Laya.timer.once(100, this, () => { Laya.Scene.close('MyScenes/KillBossUI.scene') })
+                Laya.Scene.close('MyScenes/KillBossUI.scene')
             }
         })
 
@@ -73,10 +75,10 @@ export default class KillBossUI extends Laya.Scene {
     }
 
     onClosed() {
+        WxApi.isKillBossUI = false
         AdMgr.instance.closeAppBox()
         Laya.timer.clearAll(this)
         this.closeCallback && this.closeCallback()
-        WxApi.isKillBossUI = false
     }
 
     decBar() {
@@ -99,7 +101,7 @@ export default class KillBossUI extends Laya.Scene {
         let gGap = (curG - JJMgr.instance.dataConfig.front_box_gate) % JJMgr.instance.dataConfig.front_box_everygate == 0 &&
             curG >= JJMgr.instance.dataConfig.front_box_gate
 
-        if (!this.hadShowBanner && gGap && WxApi.isValidBanner(curG)) {
+        if (!this.hadShowBanner && gGap && WxApi.isWhiteList && JJMgr.instance.dataConfig.is_allow_area == 1) {
             this.hadShowBanner = true
             Laya.timer.once(500, this, () => {
                 AdMgr.instance.showBanner()
@@ -135,7 +137,7 @@ export default class KillBossUI extends Laya.Scene {
         let gGap = (curG - JJMgr.instance.dataConfig.front_box_gate) % JJMgr.instance.dataConfig.front_box_everygate == 0 &&
             curG >= JJMgr.instance.dataConfig.front_box_gate
 
-        if (!this.hadShowBanner && gGap && this.canShowBox && WxApi.isValidBanner(curG)) {
+        if (!this.hadShowBanner && gGap && this.canShowBox && WxApi.isWhiteList && JJMgr.instance.dataConfig.is_allow_area == 1) {
             this.hadShowBanner = true
             Laya.timer.once(500, this, () => {
                 AdMgr.instance.showAppBox()

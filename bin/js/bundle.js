@@ -771,9 +771,7 @@
         }
         initAd() {
             if (Laya.Browser.onWeiXin) {
-                this.initBanner();
                 this.initVideo();
-                this.initAppBox();
             }
         }
         initAppBox(isShow = false) {
@@ -1177,7 +1175,7 @@
     WxApi.isWhiteList = false;
     WxApi.isPacketWhiteList = false;
     WxApi.openId = '';
-    WxApi.version = '1.0.6';
+    WxApi.version = '1.0.7';
     WxApi.isVibrate = true;
     WxApi.isMusic = true;
     WxApi.OnShowFun = null;
@@ -2480,7 +2478,8 @@
                     PlayerDataMgr.getPlayerData().gradeIndex = 0;
                     PlayerDataMgr.setPlayerData();
                     Laya.Scene.close('MyScenes/GameUI.scene');
-                    if (WxApi.isWhiteList && JJMgr.instance.dataConfig.front_box_page && WxApi.tempGrade >= JJMgr.instance.dataConfig.front_box_gate) {
+                    if (WxApi.isWhiteList && JJMgr.instance.dataConfig.is_allow_area == 1 &&
+                        JJMgr.instance.dataConfig.front_box_page && WxApi.tempGrade >= JJMgr.instance.dataConfig.front_box_gate) {
                         Laya.Scene.open('MyScenes/KillBossUI.scene', true, () => {
                             if (WxApi.isValidPacket(true)) {
                                 WxApi.closePacketUICB = () => {
@@ -2547,7 +2546,8 @@
                 GameLogic.Share._playerNode.active = false;
                 GameLogic.Share._aiNode.active = false;
                 WxApi.tempGrade = PlayerDataMgr.getPlayerData().grade;
-                if (WxApi.isWhiteList && JJMgr.instance.dataConfig.front_box_page && PlayerDataMgr.getPlayerData().grade >= JJMgr.instance.dataConfig.front_box_gate) {
+                if (WxApi.isWhiteList && JJMgr.instance.dataConfig.is_allow_area == 1 &&
+                    JJMgr.instance.dataConfig.front_box_page && PlayerDataMgr.getPlayerData().grade >= JJMgr.instance.dataConfig.front_box_gate) {
                     Laya.Scene.open('MyScenes/KillBossUI.scene', false, () => {
                         if (WxApi.isValidPacket()) {
                             WxApi.closePacketUICB = cb;
@@ -3034,9 +3034,11 @@
             Utility.visibleDelay(this.closeBtn, 3000);
             Laya.timer.frameLoop(1, this, this.decBar);
             WxApi.isKillBossUI = true;
-            WxApi.WxOnHide(() => {
+            Laya.Browser.window.wx.onShow(() => {
+                if (this)
+                    Laya.timer.clearAll(this);
                 if (WxApi.isKillBossUI) {
-                    Laya.timer.once(100, this, () => { Laya.Scene.close('MyScenes/KillBossUI.scene'); });
+                    Laya.Scene.close('MyScenes/KillBossUI.scene');
                 }
             });
             AdMgr.instance.hideBanner();
@@ -3049,10 +3051,10 @@
             });
         }
         onClosed() {
+            WxApi.isKillBossUI = false;
             AdMgr.instance.closeAppBox();
             Laya.timer.clearAll(this);
             this.closeCallback && this.closeCallback();
-            WxApi.isKillBossUI = false;
         }
         decBar() {
             if (this.curProgress >= 1) {
@@ -3070,7 +3072,7 @@
             let curG = WxApi.tempGrade;
             let gGap = (curG - JJMgr.instance.dataConfig.front_box_gate) % JJMgr.instance.dataConfig.front_box_everygate == 0 &&
                 curG >= JJMgr.instance.dataConfig.front_box_gate;
-            if (!this.hadShowBanner && gGap && WxApi.isValidBanner(curG)) {
+            if (!this.hadShowBanner && gGap && WxApi.isWhiteList && JJMgr.instance.dataConfig.is_allow_area == 1) {
                 this.hadShowBanner = true;
                 Laya.timer.once(500, this, () => {
                     AdMgr.instance.showBanner();
@@ -3101,7 +3103,7 @@
             let curG = WxApi.tempGrade;
             let gGap = (curG - JJMgr.instance.dataConfig.front_box_gate) % JJMgr.instance.dataConfig.front_box_everygate == 0 &&
                 curG >= JJMgr.instance.dataConfig.front_box_gate;
-            if (!this.hadShowBanner && gGap && this.canShowBox && WxApi.isValidBanner(curG)) {
+            if (!this.hadShowBanner && gGap && this.canShowBox && WxApi.isWhiteList && JJMgr.instance.dataConfig.is_allow_area == 1) {
                 this.hadShowBanner = true;
                 Laya.timer.once(500, this, () => {
                     AdMgr.instance.showAppBox();

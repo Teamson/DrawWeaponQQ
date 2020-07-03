@@ -36,9 +36,9 @@ export default class AdMgr {
 
     initAd() {
         if (Laya.Browser.onWeiXin) {
-            this.initBanner()
+            //this.initBanner()
             this.initVideo()
-            this.initAppBox()
+            //this.initAppBox()
         }
     }
 

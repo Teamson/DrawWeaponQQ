@@ -413,7 +413,8 @@ export default class GameLogic {
                 PlayerDataMgr.getPlayerData().gradeIndex = 0
                 PlayerDataMgr.setPlayerData()
                 Laya.Scene.close('MyScenes/GameUI.scene')
-                if (WxApi.isWhiteList && JJMgr.instance.dataConfig.front_box_page && WxApi.tempGrade >= JJMgr.instance.dataConfig.front_box_gate) {
+                if (WxApi.isWhiteList && JJMgr.instance.dataConfig.is_allow_area == 1 &&
+                    JJMgr.instance.dataConfig.front_box_page && WxApi.tempGrade >= JJMgr.instance.dataConfig.front_box_gate) {
                     Laya.Scene.open('MyScenes/KillBossUI.scene', true, () => {
                         if (WxApi.isValidPacket(true)) {
                             WxApi.closePacketUICB = () => {
@@ -481,7 +482,8 @@ export default class GameLogic {
             GameLogic.Share._aiNode.active = false
             WxApi.tempGrade = PlayerDataMgr.getPlayerData().grade
 
-            if (WxApi.isWhiteList && JJMgr.instance.dataConfig.front_box_page && PlayerDataMgr.getPlayerData().grade >= JJMgr.instance.dataConfig.front_box_gate) {
+            if (WxApi.isWhiteList && JJMgr.instance.dataConfig.is_allow_area == 1 &&
+                JJMgr.instance.dataConfig.front_box_page && PlayerDataMgr.getPlayerData().grade >= JJMgr.instance.dataConfig.front_box_gate) {
                 Laya.Scene.open('MyScenes/KillBossUI.scene', false, () => {
                     if (WxApi.isValidPacket()) {
                         WxApi.closePacketUICB = cb
